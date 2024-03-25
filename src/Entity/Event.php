@@ -18,19 +18,19 @@ class Event
     private ?string $name = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $date_start = null;
+    private ?\DateTimeInterface $dateStart = null;
 
     #[ORM\Column]
     private ?int $duration = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $date_limit_registration = null;
+    private ?\DateTimeInterface $dateLimitRegistration = null;
 
     #[ORM\Column]
-    private ?int $max_registration = null;
+    private ?int $maxRegistration = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $event_info = null;
+    private ?string $eventInfo = null;
 
 
 
@@ -53,12 +53,12 @@ class Event
 
     public function getDateStart(): ?\DateTimeInterface
     {
-        return $this->date_start;
+        return $this->dateStart;
     }
 
-    public function setDateStart(\DateTimeInterface $date_start): static
+    public function setDateStart(\DateTimeInterface $dateStart): static
     {
-        $this->date_start = $date_start;
+        $this->dateStart = $dateStart;
 
         return $this;
     }
@@ -77,36 +77,36 @@ class Event
 
     public function getDateLimitRegistration(): ?\DateTimeInterface
     {
-        return $this->date_limit_registration;
+        return $this->dateLimitRegistration;
     }
 
-    public function setDateLimitRegistration(\DateTimeInterface $date_limit_registration): static
+    public function setDateLimitRegistration(\DateTimeInterface $dateLimitRegistration): static
     {
-        $this->date_limit_registration = $date_limit_registration;
+        $this->dateLimitRegistration = $dateLimitRegistration;
 
         return $this;
     }
 
     public function getMaxRegistration(): ?int
     {
-        return $this->max_registration;
+        return $this->maxRegistration;
     }
 
-    public function setMaxRegistration(int $max_registration): static
+    public function setMaxRegistration(int $maxRegistration): static
     {
-        $this->max_registration = $max_registration;
+        $this->maxRegistration = $maxRegistration;
 
         return $this;
     }
 
     public function getEventInfo(): ?string
     {
-        return $this->event_info;
+        return $this->eventInfo;
     }
 
-    public function setEventInfo(?string $event_info): static
+    public function setEventInfo(?string $eventInfo): static
     {
-        $this->event_info = $event_info;
+        $this->eventInfo = $eventInfo;
 
         return $this;
     }
