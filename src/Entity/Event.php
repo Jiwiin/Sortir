@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\EventRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -31,6 +33,22 @@ class Event
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $eventInfo = null;
+
+    #[ORM\ManyToOne(inversedBy: 'event')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Location $location = null;
+
+    #[ORM\ManyToOne(inversedBy: 'events')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $eventOrganizer = null;
+
+    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'event')]
+    private Collection $users;
+
+    public function __construct()
+    {
+        $this->users = new ArrayCollection();
+    }
 
 
 
@@ -107,6 +125,57 @@ class Event
     public function setEventInfo(?string $eventInfo): static
     {
         $this->eventInfo = $eventInfo;
+
+        return $this;
+    }
+
+    public function getLocation(): ?Location
+    {
+        return $this->location;
+    }
+
+    public function setLocation(?Location $location): static
+    {
+        $this->location = $location;
+
+        return $this;
+    }
+
+    public function getEventOrganizer(): ?User
+    {
+        return $this->eventOrganizer;
+    }
+
+    public function setEventOrganizer(?User $eventOrganizer): static
+    {
+        $this->eventOrganizer = $eventOrganizer;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, User>
+     */
+    public function getUsers(): Collection
+    {
+        return $this->users;
+    }
+
+    public function addUser(User $user): static
+    {
+        if (!$this->users->contains($user)) {
+            $this->users->add($user);
+            $user->addEvent($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUser(User $user): static
+    {
+        if ($this->users->removeElement($user)) {
+            $user->removeEvent($this);
+        }
 
         return $this;
     }
