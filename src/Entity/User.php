@@ -55,7 +55,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?bool $status = null;
 
     #[ORM\ManyToOne(inversedBy: 'users')]
-    #[ORM\JoinColumn(nullable: true)]
+    #[ORM\JoinColumn(nullable: false)]
     private ?Campus $campus = null;
 
     #[ORM\OneToMany(targetEntity: Event::class, mappedBy: 'eventOrganizer')]

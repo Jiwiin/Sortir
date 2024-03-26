@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Campus;
 use App\Entity\User;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
@@ -18,7 +19,8 @@ class UserFixtures extends Fixture
     public function load(ObjectManager $manager): void
     {
         $faker = Factory::create('fr_FR');
-
+        $campusList = $manager->getRepository(Campus::class)->findAll();
+        $randomIndex = array_rand($campusList);
 
         $user = (new User());
         $user->setRoles(['ROLE_ADMIN'])
@@ -28,17 +30,20 @@ class UserFixtures extends Fixture
             ->setPhone("06".rand(00000001, 99999999))
             ->setStatus(true)
             ->setFirstname("nous")
+            ->setCampus($campusList[$randomIndex])
             ->setPassword($this->hasher->hashPassword($user, 'azerty'));
         $manager->persist($user);
 
 
         for($i = 1; $i <= 30; $i++){
             $randomUser = new User();
+            $randomIndex = array_rand($campusList);
             $randomUser->setRoles(['ROLE_USER'])
                 ->setLastname($faker->lastname())
                 ->setFirstname($faker->firstname())
                 ->setPhone("06".rand(00000001, 99999999))
                 ->setStatus(true)
+                ->setCampus($campusList[$randomIndex])
                 ->setPassword($this->hasher->hashPassword($randomUser, 'azerty'));
             //Suppression des accents pour l'adresse mail et le pseudo
             $mail = \Transliterator::create('NFD; [:Nonspacing Mark:] Remove; NFC')->transliterate($randomUser->getFirstname() . '.' .$randomUser->getLastname() . "@sortir-eni.com");
