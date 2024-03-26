@@ -42,14 +42,13 @@ class Event
     #[ORM\JoinColumn(nullable: false)]
     private ?User $eventOrganizer = null;
 
-    #[ORM\ManyToMany(targetEntity: User::class, mappedBy: 'event')]
-    private Collection $users;
+    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'participationEvents')]
+    private Collection $participate;
 
     public function __construct()
     {
-        $this->users = new ArrayCollection();
+        $this->participate = new ArrayCollection();
     }
-
 
 
     public function getId(): ?int
@@ -156,28 +155,26 @@ class Event
     /**
      * @return Collection<int, User>
      */
-    public function getUsers(): Collection
+    public function getParticipate(): Collection
     {
-        return $this->users;
+        return $this->participate;
     }
 
-    public function addUser(User $user): static
+    public function addParticipate(User $participate): static
     {
-        if (!$this->users->contains($user)) {
-            $this->users->add($user);
-            $user->addEvent($this);
+        if (!$this->participate->contains($participate)) {
+            $this->participate->add($participate);
         }
 
         return $this;
     }
 
-    public function removeUser(User $user): static
+    public function removeParticipate(User $participate): static
     {
-        if ($this->users->removeElement($user)) {
-            $user->removeEvent($this);
-        }
+        $this->participate->removeElement($participate);
 
         return $this;
     }
+
 
 }
