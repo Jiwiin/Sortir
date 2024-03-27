@@ -10,13 +10,8 @@
 
         <label for="campus">Campus : </label>
         <select id="campus" name="campus" onchange="this.form.submit()">
-            {% if app.user and app.user.campus %}
-            <option value="{{ app.user.campus.id }}"> {{ app.user.campus.name }} </option>
-            {% endif %}
             {% for site in campus %}
-                {% if not app.user.campus or site.id != app.user.campus.id %}
-                    <option value="{{ site.id }}">{{ site.name }}</option>
-                {% endif %}
+                    <option value="{{ site.id }}" {{ site.id == selectedCampus ? 'selected' : '' }}>{{ site.name }}</option>
             {% endfor %}
         </select>
 
@@ -32,6 +27,7 @@
                 <th>Inscrits/Places</th>
                 <th>Organisateur</th>
                 <th>actions</th>
+                <th>État</th>
             </tr>
         </thead>
         <tbody>
@@ -46,6 +42,7 @@
                     <a href="{{ path('app_event_show', {'id': event.id}) }}">show</a>
                     <a href="{{ path('app_event_edit', {'id': event.id}) }}">edit</a>
                 </td>
+                <td>{{ event.state.name }} </td>
             </tr>
         {% else %}
             <tr>

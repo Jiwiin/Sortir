@@ -221,6 +221,10 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
         }
         $manager->persist($event);
 
+        $campus = (new Campus());
+        $campus->setName('Campus en ligne');
+        $manager->persist($campus);
+
         $manager->flush();
     }
 

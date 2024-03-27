@@ -31,16 +31,15 @@ class EventController extends AbstractController
         $user = $this->getUser();
 
         /** @var User $user */
-        $campusUser = $user->getCampus();
 
-        //Récupère l'id du campus envoyé dans l'url via le filtre
-        $campusIdFromRequest = $request->query->get('campus');
+        //Récupère l'id du campus de l'utilisateur connecté
+        $defaultCampusId = $user->getCampus() ? $user->getCampus()->getId() : null;
 
-        //Si pas d'id dans l'url, utiliser l'id du campus de l'utilisateur connecté
-        $campusId = $campusIdFromRequest ?: ($campusUser ? $campusUser->getId() : null);
+        //Récupère l'id du campus envoyé dans l'url, ou utilise l'id du campus de l'utilisateur connecté
+        $campusId = $request->query->get('campus', $defaultCampusId);
 
         // Récupère les sorties lié à un campus si elles existent
-        $events = $campusId ? $eventRepository->findByCampusOrganizer($campusId) : [];
+        $events = $eventRepository->findByCampusOrganizer($campusId);
 
         return $this->render('event/index.html.twig', [
             'events' => $events,
