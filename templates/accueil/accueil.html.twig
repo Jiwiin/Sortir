@@ -6,7 +6,9 @@
 
 {% block header %}
     <div class="container-fluid ">
-        {{ parent() }}
-        {% include("inc/nav.html.twig") %}
+        <nav class="navbar navbar-light">
+            {{ parent() }}
+            {% include("inc/nav.html.twig") %}
+        </nav>
     </div>
 {% endblock %}

@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\CampusRepository;
 use App\Repository\EventRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -11,9 +12,9 @@ use Symfony\Component\Routing\Attribute\Route;
 class EventController extends AbstractController
 {
     #[Route('', name: 'list')]
-    public function list(EventRepository $eventRepository): Response
+    public function list(EventRepository $eventRepository, CampusRepository $campusRepository, Request $request): Response
     {
-        $events = $eventRepository->findAll();
+        $campusId = $request->query->get('campus');
         return $this->render('event/list.html.twig', [
             "events" => $events,
         ]);
