@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\State;
 use App\Repository\EventRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -44,6 +45,9 @@ class Event
 
     #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'participationEvents')]
     private Collection $participate;
+
+    #[ORM\Column(length: 255, enumType: State::class)]
+    private ?State $state = null;
 
     public function __construct()
     {
@@ -172,6 +176,18 @@ class Event
     public function removeParticipate(User $participate): static
     {
         $this->participate->removeElement($participate);
+
+        return $this;
+    }
+
+    public function getState(): ?State
+    {
+        return $this->state;
+    }
+
+    public function setState(State $state): static
+    {
+        $this->state = $state;
 
         return $this;
     }

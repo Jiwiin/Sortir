@@ -6,6 +6,7 @@ use App\Entity\Campus;
 use App\Entity\Event;
 use App\Entity\Location;
 use App\Entity\User;
+use App\Enum\State;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -21,14 +22,14 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
         $locationList = $manager->getRepository(Location::class)->findAll();
         $userList = $manager->getRepository(User::class)->findAll();
         $event = new Event();
-        $dateStart = \DateTimeImmutable::createFromMutable($faker->dateTime());
-
+        $dateStart = new \DateTime('2024-01-02 14:00:00');
         $event->setName('Paintball')
             ->setDateStart($dateStart)
             ->setDuration(180)
             ->setDateLimitRegistration($dateStart->sub($interval))
             ->setMaxRegistration(20)
             ->setEventInfo($faker->text)
+            ->setState(State::TERMINEE)
             ->setLocation($locationList[array_rand($locationList)])
             ->addParticipate($userList[array_rand($userList)])
             ->addParticipate($userList[array_rand($userList)])
@@ -42,6 +43,7 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
         $event->setName('Resto à gogo')
             ->setDateStart($dateStart)
             ->setDuration(90)
+            ->setState(State::OUVERTE)
             ->setDateLimitRegistration($dateStart->sub($interval))
             ->setMaxRegistration(8)
             ->setEventInfo($faker->text)
@@ -54,6 +56,7 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
         $event->setName('Resto de la promo')
             ->setDateStart($dateStart)
             ->setDuration(90)
+            ->setState(State::TERMINEE)
             ->setDateLimitRegistration($dateStart->sub($interval))
             ->setMaxRegistration(8)
             ->setEventInfo($faker->text)
@@ -71,12 +74,13 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
             ->setDateStart($dateStart)
             ->setDuration($durations[array_rand($durations)])
             ->setDateLimitRegistration($dateStart->sub($interval))
+            ->setState(State::OUVERTE)
             ->setMaxRegistration(8)
             ->setEventInfo($faker->text)
             ->setLocation($locationList[array_rand($locationList)])
             ->setEventOrganizer($userList[array_rand($userList)]);
 
-        for($i = 1; $i <= rand(3,8); $i++){
+        for($i = 1; $i <= rand(3,7); $i++){
             $event->addParticipate($userList[array_rand($userList)]);
         }
         $manager->persist($event);
@@ -86,13 +90,14 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
         $event->setName('Apéro cinéma')
             ->setDateStart($dateStart)
             ->setDuration($durations[array_rand($durations)])
+            ->setState(State::OUVERTE)
             ->setDateLimitRegistration($dateStart->sub($interval))
             ->setMaxRegistration(8)
             ->setEventInfo($faker->text)
             ->setLocation($locationList[array_rand($locationList)])
             ->setEventOrganizer($userList[array_rand($userList)]);
 
-        for($i = 1; $i <= rand(3,8); $i++){
+        for($i = 1; $i <= rand(3,7); $i++){
             $event->addParticipate($userList[array_rand($userList)]);
         }
         $manager->persist($event);
@@ -103,12 +108,13 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
             ->setDateStart($dateStart)
             ->setDuration($durations[array_rand($durations)])
             ->setDateLimitRegistration($dateStart->sub($interval))
+            ->setState(State::OUVERTE)
             ->setMaxRegistration(15)
             ->setEventInfo($faker->text)
             ->setLocation($locationList[array_rand($locationList)])
             ->setEventOrganizer($userList[array_rand($userList)]);
 
-        for($i = 1; $i <= rand(3,15); $i++){
+        for($i = 1; $i <= rand(3,14); $i++){
             $event->addParticipate($userList[array_rand($userList)]);
         }
         $manager->persist($event);
@@ -120,11 +126,12 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
             ->setDuration($durations[array_rand($durations)])
             ->setDateLimitRegistration($dateStart->sub($interval))
             ->setMaxRegistration(8)
+            ->setState(State::OUVERTE)
             ->setEventInfo($faker->text)
             ->setLocation($locationList[array_rand($locationList)])
             ->setEventOrganizer($userList[array_rand($userList)]);
 
-        for($i = 1; $i <= rand(3,8); $i++){
+        for($i = 1; $i <= rand(3,7); $i++){
             $event->addParticipate($userList[array_rand($userList)]);
         }
         $manager->persist($event);
@@ -135,12 +142,13 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
             ->setDateStart($dateStart)
             ->setDuration($durations[array_rand($durations)])
             ->setDateLimitRegistration($dateStart->sub($interval))
+            ->setState(State::OUVERTE)
             ->setMaxRegistration(8)
             ->setEventInfo($faker->text)
             ->setLocation($locationList[array_rand($locationList)])
             ->setEventOrganizer($userList[array_rand($userList)]);
 
-        for($i = 1; $i <= rand(3,8); $i++){
+        for($i = 1; $i <= rand(3,7); $i++){
             $event->addParticipate($userList[array_rand($userList)]);
         }
         $manager->persist($event);
@@ -150,13 +158,14 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
         $event->setName('Escalade en salle')
             ->setDateStart($dateStart)
             ->setDuration($durations[array_rand($durations)])
+            ->setState(State::OUVERTE)
             ->setDateLimitRegistration($dateStart->sub($interval))
             ->setMaxRegistration(12)
             ->setEventInfo($faker->text)
             ->setLocation($locationList[array_rand($locationList)])
             ->setEventOrganizer($userList[array_rand($userList)]);
 
-        for($i = 1; $i <= rand(3,12); $i++){
+        for($i = 1; $i <= rand(3,11); $i++){
             $event->addParticipate($userList[array_rand($userList)]);
         }
         $manager->persist($event);
@@ -166,13 +175,14 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
         $event->setName('Balade en Kayak')
             ->setDateStart($dateStart)
             ->setDuration($durations[array_rand($durations)])
+            ->setState(State::OUVERTE)
             ->setDateLimitRegistration($dateStart->sub($interval))
             ->setMaxRegistration(12)
             ->setEventInfo($faker->text)
             ->setLocation($locationList[array_rand($locationList)])
             ->setEventOrganizer($userList[array_rand($userList)]);
 
-        for($i = 1; $i <= rand(3,12); $i++){
+        for($i = 1; $i <= rand(3,11); $i++){
             $event->addParticipate($userList[array_rand($userList)]);
         }
         $manager->persist($event);
@@ -184,27 +194,29 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
             ->setDuration($durations[array_rand($durations)])
             ->setDateLimitRegistration($dateStart->sub($interval))
             ->setMaxRegistration(20)
+            ->setState(State::CLOTURE)
             ->setEventInfo($faker->text)
             ->setLocation($locationList[array_rand($locationList)])
             ->setEventOrganizer($userList[array_rand($userList)]);
 
-        for($i = 1; $i <= rand(3,20); $i++){
+        for($i = 1; $i <= 20; $i++){
             $event->addParticipate($userList[array_rand($userList)]);
         }
         $manager->persist($event);
 
         $event = new Event();
-        $dateStart = new \DateTime('2024-04-5 09:00:00');
+        $dateStart = new \DateTime('2024-04-05 09:00:00');
         $event->setName('Visite musée')
             ->setDateStart($dateStart)
             ->setDuration($durations[array_rand($durations)])
+            ->setState(State::OUVERTE)
             ->setDateLimitRegistration($dateStart->sub($interval))
             ->setMaxRegistration(25)
             ->setEventInfo($faker->text)
             ->setLocation($locationList[array_rand($locationList)])
             ->setEventOrganizer($userList[array_rand($userList)]);
 
-        for($i = 1; $i <= rand(3,25); $i++){
+        for($i = 1; $i <= rand(3,24); $i++){
             $event->addParticipate($userList[array_rand($userList)]);
         }
         $manager->persist($event);

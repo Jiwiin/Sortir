@@ -29,9 +29,9 @@ class EventController extends AbstractController
 
         //Vérifie si l'utilisateur connecté est une instance de User afin de récupérer son campus
         $user = $this->getUser();
-        if($user instanceof User){
-            $campusUser = $user->getCampus();
-        }
+
+        /** @var User $user */
+        $campusUser = $user->getCampus();
 
         //Récupère l'id du campus envoyé dans l'url via le filtre
         $campusIdFromRequest = $request->query->get('campus');
