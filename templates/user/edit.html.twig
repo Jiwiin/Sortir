@@ -4,10 +4,49 @@
 
 {% block body %}
     <h1>Edit User</h1>
+<div class="modify_user">
+    {{ form_errors(form) }}
 
-    {{ include('user/_form.html.twig', {'button_label': 'Update'}) }}
+    {{ form_start(form) }}
+    {{ form_row(form.username, {
+        label: 'Pseudo :',
+        attr: {'class': 'form-control',
+            'autocomplete' : 'username'
+        }
+    }) }}
+    {{ form_row(form.lastname, {
+        label: 'Nom :',
+        attr: {'class': 'form-control',
+            'autocomplete' : 'lastname'
+        }
+    }) }}
+    {{ form_row(form.firstname, {
+        label: 'Prénom :',
+        attr: {'class': 'form-control',
+            'autocomplete' : 'name'
+        }
+    }) }}
+    {{ form_row(form.email, {
+        label: 'Email :',
+        attr: {'class': 'form-control',
+            'autocomplete' : 'email'
+        }
+    }) }}
+    {{ form_row(form.phone, {
+        label: 'Téléphone :',
+        attr: {'class': 'form-control',
+            'autocomplete' : 'telephone'
+        }
+    }) }}
+    <label for="{{ form.password.vars.id }}">Mot de passe :</label>
+        <input type="password" id="{{ form.password.vars.id }}" name="{{ form.password.vars.full_name }}" class="form-control">
+    <label for="{{ form.password.vars.id }}">Confirmer le mot de passe :</label>
+    <input type="password" id="{{ form.password.vars.id }}" name="{{ form.password.vars.full_name }}" class="form-control">
+</div>
+    <button type="submit" class="btn">Modifier</button>
+    {% if is_granted('ROLE_ADMIN') %}
+    {{ form_end(form) }}
 
-    <a href="{{ path('app_user_index') }}">back to list</a>
-
-    {{ include('user/_delete_form.html.twig') }}
+{% endif %}
+    <a href="{{ path('app_event_index') }}">Retour</a>
 {% endblock %}
