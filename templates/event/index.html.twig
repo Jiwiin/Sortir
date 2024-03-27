@@ -1,33 +1,41 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Event index{% endblock %}
+{% block title %}Liste des sorties - {{ parent() }}{% endblock %}
 
 {% block body %}
-    <h1>Event index</h1>
+    <div class="container">
+    <h2>Filtrer les sorties</h2>
+    <form class="filter">
+    <div>
+        <label for="campus">Campus : </label>
+        <select id="campus">
+            <option value=""> </option>
+            {% for site in campus %}
+                <option value="{{ site.name }}">{{ site.name }}</option>
+            {% endfor %}
+        </select>
+    </div>
+    </form>
 
     <table class="table">
         <thead>
             <tr>
-                <th>Id</th>
-                <th>Name</th>
-                <th>DateStart</th>
-                <th>Duration</th>
-                <th>DateLimitRegistration</th>
-                <th>MaxRegistration</th>
-                <th>EventInfo</th>
+                <th>Nom de la sortie</th>
+                <th>Date de la sortie</th>
+                <th>Clôture</th>
+                <th>Inscrits/Places</th>
+                <th>Organisateur</th>
                 <th>actions</th>
             </tr>
         </thead>
         <tbody>
         {% for event in events %}
             <tr>
-                <td>{{ event.id }}</td>
                 <td>{{ event.name }}</td>
                 <td>{{ event.dateStart ? event.dateStart|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ event.duration }}</td>
                 <td>{{ event.dateLimitRegistration ? event.dateLimitRegistration|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ event.maxRegistration }}</td>
-                <td>{{ event.eventInfo }}</td>
+                <td>{{ event.participate.count }}/ {{ event.maxRegistration }}</td>
+                <td>{{ event.eventOrganizer.username }}</td>
                 <td>
                     <a href="{{ path('app_event_show', {'id': event.id}) }}">show</a>
                     <a href="{{ path('app_event_edit', {'id': event.id}) }}">edit</a>
@@ -40,6 +48,8 @@
         {% endfor %}
         </tbody>
     </table>
+    </div>
+
 
     <a href="{{ path('app_event_new') }}">Create new</a>
 {% endblock %}
