@@ -5,15 +5,21 @@
 {% block body %}
     <div class="container">
     <h2>Filtrer les sorties</h2>
-    <form class="filter">
+    <form action="{{ path('app_event_index') }}" method="get" class="filter">
     <div>
+
         <label for="campus">Campus : </label>
-        <select id="campus">
-            <option value=""> </option>
+        <select id="campus" name="campus" onchange="this.form.submit()">
+            {% if app.user and app.user.campus %}
+            <option value="{{ app.user.campus.id }}"> {{ app.user.campus.name }} </option>
+            {% endif %}
             {% for site in campus %}
-                <option value="{{ site.name }}">{{ site.name }}</option>
+                {% if not app.user.campus or site.id != app.user.campus.id %}
+                    <option value="{{ site.id }}">{{ site.name }}</option>
+                {% endif %}
             {% endfor %}
         </select>
+
     </div>
     </form>
 
@@ -43,7 +49,7 @@
             </tr>
         {% else %}
             <tr>
-                <td colspan="8">no records found</td>
+                <td colspan="8">Aucune sortie trouvée</td>
             </tr>
         {% endfor %}
         </tbody>

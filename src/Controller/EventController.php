@@ -3,24 +3,49 @@
 namespace App\Controller;
 
 use App\Entity\Event;
+use App\Entity\User;
 use App\Form\EventType;
 use App\Repository\CampusRepository;
 use App\Repository\EventRepository;
+use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
+#[IsGranted('ROLE_USER')]
 #[Route('/event')]
 class EventController extends AbstractController
 {
     #[Route('/', name: 'app_event_index', methods: ['GET'])]
-    public function index(EventRepository $eventRepository, CampusRepository $campusRepository): Response
+    public function index(EventRepository $eventRepository, CampusRepository $campusRepository, Request $request): Response
     {
+        if(!$this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        //Vérifie si l'utilisateur connecté est une instance de User afin de récupérer son campus
+        $user = $this->getUser();
+        if($user instanceof User){
+            $campusUser = $user->getCampus();
+        }
+
+        //Récupère l'id du campus envoyé dans l'url via le filtre
+        $campusIdFromRequest = $request->query->get('campus');
+
+        //Si pas d'id dans l'url, utiliser l'id du campus de l'utilisateur connecté
+        $campusId = $campusIdFromRequest ?: ($campusUser ? $campusUser->getId() : null);
+
+        // Récupère les sorties lié à un campus si elles existent
+        $events = $campusId ? $eventRepository->findByCampusOrganizer($campusId) : [];
+
         return $this->render('event/index.html.twig', [
-            'events' => $eventRepository->findAll(),
-            'campus' => $campusRepository->findAll()
+            'events' => $events,
+            'campus' => $campusRepository->findAll(),
+            'selectedCampus' => $campusId,
         ]);
     }
 

@@ -47,4 +47,13 @@ class EventRepository extends ServiceEntityRepository
     //            ->getOneOrNullResult()
     //        ;
     //    }
+    public function findByCampusOrganizer($campusId)
+    {
+        return $this->createQueryBuilder('e')
+            ->innerJoin('e.eventOrganizer', 'o')
+            ->andWhere('o.campus = :campusId')
+            ->setParameter('campusId', $campusId)
+            ->getQuery()
+            ->getResult();
+    }
 }
