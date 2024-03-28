@@ -3,7 +3,7 @@
 {% block title %}Liste des sorties - {{ parent() }}{% endblock %}
 
 {% block body %}
-    <div class="container">
+    <div>
         {% if is_granted('ROLE_ADMIN') %}
     <h2>Filtrer les sorties</h2>
         {% endif %}
