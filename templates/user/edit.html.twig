@@ -47,13 +47,19 @@
         label: 'Confirmer le mot de passe :',
         attr: {'class': 'form-control'}
     }) }}
+
+    {{ form_row(form.campus, {
+        label: 'Campus :',
+        attr: {'class': 'form-control',
+            'autocomplete' : 'campus'}
+    }) }}
+
+
     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate')}}">
 
     <button type="submit" class="btn">Modifier</button>
     <a href="{{ path('app_event_index') }}">Retour</a>
 
-    {% if is_granted('ROLE_ADMIN') %}
-    {{ form_end(form) }}
-    {%  endif %}
+
 </div>
 {% endblock %}
