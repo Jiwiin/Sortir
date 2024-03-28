@@ -38,15 +38,28 @@
             'autocomplete' : 'telephone'
         }
     }) }}
-    <label for="{{ form.password.vars.id }}">Mot de passe :</label>
-        <input type="password" id="{{ form.password.vars.id }}" name="{{ form.password.vars.full_name }}" class="form-control">
-    <label for="{{ form.password.vars.id }}">Confirmer le mot de passe :</label>
-    <input type="password" id="{{ form.password.vars.id }}" name="{{ form.password.vars.full_name }}" class="form-control">
-</div>
-    <button type="submit" class="btn">Modifier</button>
-    {% if is_granted('ROLE_ADMIN') %}
-    {{ form_end(form) }}
+    {{ form_row(form.password, {
+        label: 'Mot de passe :',
+        attr: {'class': 'form-control'
+        }
+    }) }}
+    {{ form_row(form.passwordConfirm, {
+        label: 'Confirmer le mot de passe :',
+        attr: {'class': 'form-control'}
+    }) }}
 
-{% endif %}
+    {{ form_row(form.campus, {
+        label: 'Campus :',
+        attr: {'class': 'form-control',
+            'autocomplete' : 'campus'}
+    }) }}
+
+
+    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate')}}">
+
+    <button type="submit" class="btn">Modifier</button>
     <a href="{{ path('app_event_index') }}">Retour</a>
+
+
+</div>
 {% endblock %}

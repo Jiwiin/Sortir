@@ -6,7 +6,7 @@
         <a class="nav-link active" href="#" title="Accueil">Accueil</a>
     </li>
     <li class="nav-item">
-        <a class="nav-link" href="#" title="Profil">Mon profil</a>
+        <a class="nav-link" href="{{ path('app_user_show', {'id': app.user.id}) }}" title="Profil">Mon profil</a>
     </li>
     <li class="nav-item">
         <a class="nav-link" href="#" title="">Se déconnecter</a>

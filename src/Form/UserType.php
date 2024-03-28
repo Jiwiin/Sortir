@@ -25,6 +25,10 @@ class UserType extends AbstractType
                 'label' => 'Mot de passe :',
                 'attr' => ['class' => 'form-control'],
             ])
+            ->add('passwordConfirm', PasswordType::class, [
+                'label' => 'Confirmer le mot de passe',
+                'mapped' => false
+            ])
             ->add('roles', ChoiceType::class, [
                 'choices' => [
                     'User' => 'ROLE_USER',
