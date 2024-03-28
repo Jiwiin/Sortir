@@ -4,7 +4,11 @@
 
 {% block body %}
     <div class="container">
+        {% if is_granted('ROLE_ADMIN') %}
     <h2>Filtrer les sorties</h2>
+        {% endif %}
+
+
     <form action="{{ path('app_event_index') }}" method="get" class="filter">
     <div>
 
@@ -18,31 +22,58 @@
     </div>
     </form>
 
-    <table class="table">
+    <table class="table table-hover" border="1">
         <thead>
             <tr>
                 <th>Nom de la sortie</th>
                 <th>Date de la sortie</th>
                 <th>Clôture</th>
                 <th>Inscrits/Places</th>
+                <th>État</th>
+                <th>Inscrit</th>
                 <th>Organisateur</th>
                 <th>actions</th>
-                <th>État</th>
             </tr>
         </thead>
         <tbody>
         {% for event in events %}
             <tr>
-                <td>{{ event.name }}</td>
+                <td><a href="{{ path('app_event_show', {'id': event.id}) }}">{{ event.name }}</a></td>
                 <td>{{ event.dateStart ? event.dateStart|format_datetime(pattern="dd MMMM y à HH:mm", locale='fr'): '' }}</td>
                 <td>{{ event.dateLimitRegistration ? event.dateLimitRegistration|format_datetime(pattern="dd MMMM y à HH:mm", locale='fr') : '' }}</td>
                 <td>{{ event.participate.count }}/ {{ event.maxRegistration }}</td>
-                <td>{{ event.eventOrganizer.username }}</td>
+                <td> <span class="badge rounded-pill
+                                {% if event.state.value == 'Ouverte' %}
+                                    bg-success
+                                {% elseif event.state.value == 'Terminée' %}
+                                    bg-dark
+                                {% elseif event.state.value == 'Historisée' %}
+                                    bg-secondary
+                                {% elseif event.state.value == 'Annulée' %}
+                                    bg-danger
+                                {% elseif event.state.value == 'En cours' %}
+                                    bg-info
+                                {% elseif event.state.value == 'Clôturée' %}
+                                    bg-warning
+                                {% else %}
+                                    bg-primary
+                                {% endif %}
+                                ">{{ event.state.value }}</span> </td>
                 <td>
-                    <a href="{{ path('app_event_show', {'id': event.id}) }}">show</a>
-                    <a href="{{ path('app_event_edit', {'id': event.id}) }}">edit</a>
+                        {% if app.user in event.participate %}
+                            <img src="{{ asset('img/icon/check.png')}}" width="25px">
+                        {% elseif app.user == event.eventOrganizer %}
+                            <img src="{{ asset('img/icon/owner.png')}}" width="25px">
+                        {% endif %}
                 </td>
-                <td>{{ event.state.name }} </td>
+                <td><a href="{{ path('app_user_show', {'id': event.eventOrganizer.id}) }}">
+                            {{ event.eventOrganizer.username }}
+                    </a></td>
+                <td>
+                    {% if app.user == event.eventOrganizer %}
+                    <a href="{{ path('app_event_edit', {'id': event.id}) }}"><img src="{{ asset('img/icon/construction.png')}}" width="25px"></a>
+                    {% endif %}
+                </td>
             </tr>
         {% else %}
             <tr>
