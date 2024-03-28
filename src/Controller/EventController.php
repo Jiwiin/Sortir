@@ -2,9 +2,11 @@
 
 namespace App\Controller;
 
+use App\Data\SearchData;
 use App\Entity\Event;
 use App\Entity\User;
 use App\Form\EventType;
+use App\Form\SearchForm;
 use App\Repository\CampusRepository;
 use App\Repository\EventRepository;
 use App\Repository\UserRepository;
@@ -16,7 +18,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[IsGranted('ROLE_USER')]
+
 #[Route('/event')]
 class EventController extends AbstractController
 {
@@ -26,6 +28,10 @@ class EventController extends AbstractController
         if(!$this->getUser()) {
             return $this->redirectToRoute('app_login');
         }
+
+        // filtre form
+        $data = new SearchData();
+        $form = $this->createForm(SearchForm::class, $data);
 
         //Vérifie si l'utilisateur connecté est une instance de User afin de récupérer son campus
         $user = $this->getUser();
@@ -45,6 +51,7 @@ class EventController extends AbstractController
             'events' => $events,
             'campus' => $campusRepository->findAll(),
             'selectedCampus' => $campusId,
+            'form' => $form->createView()
         ]);
     }
 
