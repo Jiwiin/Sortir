@@ -2,7 +2,10 @@
 
 namespace App\Repository;
 
+use App\Data\SearchData;
 use App\Entity\Event;
+use App\Entity\User;
+use App\Enum\State;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -55,5 +58,67 @@ class EventRepository extends ServiceEntityRepository
             ->setParameter('campusId', $campusId)
             ->getQuery()
             ->getResult();
+    }
+
+    public function findSearch(SearchData $search): array
+    {
+        $query = $this
+            ->createQueryBuilder('e')
+            ->join('e.eventOrganizer', 'o')
+            ->join('o.campus', 'c');
+
+        if(!empty($search->q)) {
+            $query
+                ->andWhere('e.name LIKE :q')
+                ->setParameter('q', "%{$search->q}%");
+        }
+
+        if(!empty($search->campus)) {
+            $query
+                ->andWhere('c.id = :campusId')
+                ->setParameter('campusId', $search->campus);
+        }
+
+        if(!empty($search->startDate)) {
+            $query
+                ->andWhere('e.dateStart >= :startDate')
+                ->setParameter('startDate', $search->startDate);
+        }
+
+        if(!empty($search->endDate)) {
+            $query
+                ->andWhere('e.dateStart <= :endDate')
+                ->setParameter('endDate', $search->endDate);
+        }
+
+        if($search->organized) {
+            $query
+                ->andWhere('e.eventOrganizer = :organizerId')
+                ->setParameter('organizerId', $search->organized);
+        }
+
+        if($search->registered) {
+            $query
+                ->join('e.participate', 'p')
+                ->andWhere('p.id NOT IN :participateId')
+                ->setParameter('participateId', $search->registered);
+        }
+
+        /*if ($search->notRegistered) {
+            $query
+                ->leftJoin('e.participate', 'np')
+                ->andWhere('np.id != :noParticipateId')
+                ->setParameter('noParticipateId', $search->notRegistered);
+        }*/
+
+        if($search->eventCompleted) {
+            $query
+                ->andWhere('e.dateStart < :now')
+                ->setParameter('now', new \DateTime());
+        }
+        $query
+            ->orderBy('e.dateLimitRegistration', 'ASC');
+
+        return $query->getQuery()->getResult();
     }
 }

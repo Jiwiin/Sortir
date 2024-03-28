@@ -2,11 +2,14 @@
 
 namespace App\Data;
 
+use App\Entity\Campus;
+use App\Entity\User;
+
 class SearchData
 {
-    public string $q ='';
+    public ?string $q ='';
 
-    public array $campus = [];
+    public ?Campus $campus = null;
 
     public bool $organized = false;
 
@@ -16,8 +19,8 @@ class SearchData
 
     public bool $eventCompleted = false;
 
-    public ?\DateTime $startDate = null;
+    public ?\DateTimeInterface $startDate = null;
 
-    public ?\DateTime $endDate = null;
+    public ?\DateTimeInterface $endDate = null;
 
 }

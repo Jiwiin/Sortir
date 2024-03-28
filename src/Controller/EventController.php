@@ -3,27 +3,26 @@
 namespace App\Controller;
 
 use App\Data\SearchData;
+use App\Entity\Campus;
 use App\Entity\Event;
 use App\Entity\User;
 use App\Form\EventType;
 use App\Form\SearchForm;
 use App\Repository\CampusRepository;
 use App\Repository\EventRepository;
-use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Bundle\SecurityBundle\Security;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Component\Security\Http\Attribute\IsGranted;
+
 
 
 #[Route('/event')]
 class EventController extends AbstractController
 {
     #[Route('/', name: 'app_event_index', methods: ['GET'])]
-    public function index(EventRepository $eventRepository, CampusRepository $campusRepository, Request $request): Response
+    public function index(EventRepository $eventRepository, EntityManagerInterface $entityManager,  CampusRepository $campusRepository, Request $request): Response
     {
         if(!$this->getUser()) {
             return $this->redirectToRoute('app_login');
@@ -32,26 +31,31 @@ class EventController extends AbstractController
         // filtre form
         $data = new SearchData();
         $form = $this->createForm(SearchForm::class, $data);
+        $form->handleRequest($request);
 
+        /** @var User $user */
         //Vérifie si l'utilisateur connecté est une instance de User afin de récupérer son campus
         $user = $this->getUser();
 
-        /** @var User $user */
+        //Récupère l'id du campus envoyé dans l'url
+        $campusId = $request->query->get('campus');
+        if(!empty($campusId)) {
+            $campus = $entityManager->getRepository(Campus::class)->find($campusId);
+            if($campus !== null) {
+                $data->campus = $campus;
+            }
+        } else {
+            $data->campus = $user->getCampus();
+        }
 
-        //Récupère l'id du campus de l'utilisateur connecté
-        $defaultCampusId = $user->getCampus() ? $user->getCampus()->getId() : null;
-
-        //Récupère l'id du campus envoyé dans l'url, ou utilise l'id du campus de l'utilisateur connecté
-        $campusId = $request->query->get('campus', $defaultCampusId);
-
-        // Récupère les sorties lié à un campus si elles existent
-        $events = $eventRepository->findByCampusOrganizer($campusId);
+        $data->user = $user;
+        $events = $eventRepository->findSearch($data);
 
         return $this->render('event/index.html.twig', [
             'events' => $events,
             'campus' => $campusRepository->findAll(),
             'selectedCampus' => $campusId,
-            'form' => $form->createView()
+            'form' => $form->createView(),
         ]);
     }
 
