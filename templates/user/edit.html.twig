@@ -44,9 +44,9 @@
     <input type="password" id="{{ form.password.vars.id }}" name="{{ form.password.vars.full_name }}" class="form-control">
 </div>
     <button type="submit" class="btn">Modifier</button>
-    {% if is_granted('ROLE_ADMIN') %}
+
     {{ form_end(form) }}
 
-{% endif %}
+
     <a href="{{ path('app_event_index') }}">Retour</a>
 {% endblock %}
