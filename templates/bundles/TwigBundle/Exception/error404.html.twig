@@ -1,0 +1,14 @@
+{% extends "base.html.twig"%}
+
+{% block title %}Page non trouvé{% enblock %}
+
+{% block body %}
+<main class="container">
+    <section>
+        <h1>Page non trouvé</h1>
+        <p>La page que vous avez sélectionner n'a pas été trouvée.</p>
+        <img src="{{ asset('img/error404.jpeg') }}">
+        <a href="{{ path('app_event_index') }}">Retour à l'accueil</a>
+    </section>
+</main>
+{% enblock %}
