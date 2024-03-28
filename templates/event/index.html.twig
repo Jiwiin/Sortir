@@ -34,8 +34,8 @@
         {% for event in events %}
             <tr>
                 <td>{{ event.name }}</td>
-                <td>{{ event.dateStart ? event.dateStart|date('Y-m-d H:i:s') : '' }}</td>
-                <td>{{ event.dateLimitRegistration ? event.dateLimitRegistration|date('Y-m-d H:i:s') : '' }}</td>
+                <td>{{ event.dateStart ? event.dateStart|format_datetime(pattern="dd MMMM y à HH:mm", locale='fr'): '' }}</td>
+                <td>{{ event.dateLimitRegistration ? event.dateLimitRegistration|format_datetime(pattern="dd MMMM y à HH:mm", locale='fr') : '' }}</td>
                 <td>{{ event.participate.count }}/ {{ event.maxRegistration }}</td>
                 <td>{{ event.eventOrganizer.username }}</td>
                 <td>
