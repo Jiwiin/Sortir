@@ -4,10 +4,12 @@
 
 {% block body %}
     <div>
-        {% if is_granted('ROLE_ADMIN') %}
     <h2>Filtrer les sorties</h2>
-        {% endif %}
-
+        <div class="row">
+            <div>
+                {% include 'event/_filter.html.twig' with {form: form} only %}
+            </div>
+        </div>
 
     <form action="{{ path('app_event_index') }}" method="get" class="filter">
     <div>
