@@ -1,3 +1,7 @@
 body {
     background-color: skyblue;
 }
+
+.eventlist-table img {
+    padding-right: 5px;
+}

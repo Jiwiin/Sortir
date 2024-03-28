@@ -19,31 +19,45 @@ class SearchForm extends AbstractType
     {
         $builder
             ->add('q', TextType::class, [
-                'label' => false,
+                'label' => 'Le nom de la sortie contient',
                 'required' => false,
                 'attr' => [
-                    'placeholder' => 'Rechercher une sortie'
+                    'placeholder' => 'search'
                 ]
             ])
             ->add('campus', EntityType::class, [
-                'label' => false,
+                'label' => 'Campus :',
                 'required' => false,
                 'class' => Campus::class,
-                'expanded' => true,
-                'multiple' => true
+                'multiple' => false,
                 ])
             ->add('startDate', DateType::class, [
-                'label' => false,
+                'label' => 'Entre',
+                'html5' => true,
+                'widget' => 'single_text',
                 'required' => false,
             ])
             ->add('endDate', DateType::class, [
-                'label' => false,
+                'label' => 'Et',
                 'required' => false,
+                'html5' => true,
+                'widget' => 'single_text',
             ])
             ->add('organized', CheckboxType::class, [
                 'label' => 'Sorties dont je suis l\'organisateur/trice',
                 'required' => false,
-
+            ])
+            ->add('registered', CheckboxType::class, [
+                'label' => 'Sorties auxquelles je suis inscrit/e',
+                'required' => false,
+            ])
+            ->add('notRegistered', CheckboxType::class, [
+                'label' => 'Sorties auxquelles je ne suis pas inscrit/e',
+                'required' => false,
+            ])
+            ->add('eventCompleted', CheckboxType::class, [
+                'label' => 'Sorties terminées',
+                'required' => false,
             ])
         ;
     }
@@ -53,7 +67,7 @@ class SearchForm extends AbstractType
         $resolver->setDefaults([
            'data_class' => SearchData::class,
            'method' => 'GET',
-            'csrf_protection' => false
+           'csrf_protection' => false
         ]);
     }
 

@@ -5,27 +5,9 @@
 {% block body %}
     <div>
     <h2>Filtrer les sorties</h2>
-        <div class="row">
-            <div>
-                {% include 'event/_filter.html.twig' with {form: form} only %}
-            </div>
-        </div>
-
-    <form action="{{ path('app_event_index') }}" method="get" class="filter">
-    <div>
-
-        <label for="campus">Campus : </label>
-        <select id="campus" name="campus" onchange="this.form.submit()">
-            {% for site in campus %}
-                    <option value="{{ site.id }}" {{ site.id == selectedCampus ? 'selected' : '' }}>{{ site.name }}</option>
-            {% endfor %}
-        </select>
-
-    </div>
-    </form>
-
-    <table class="table table-hover" border="1">
-        <thead>
+                {% include 'event/_filter.html.twig' with {form: form, selectedCampus: selectedCampus, campus: campus} only %}
+    <table class="table table-hover eventlist-table">
+        <thead class="text-center">
             <tr>
                 <th>Nom de la sortie</th>
                 <th>Date de la sortie</th>
@@ -34,46 +16,54 @@
                 <th>État</th>
                 <th>Inscrit</th>
                 <th>Organisateur</th>
-                <th>actions</th>
+                <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
+        <tbody class="text-center">
         {% for event in events %}
             <tr>
                 <td><a href="{{ path('app_event_show', {'id': event.id}) }}">{{ event.name }}</a></td>
-                <td>{{ event.dateStart ? event.dateStart|format_datetime(pattern="dd MMMM y à HH:mm", locale='fr'): '' }}</td>
-                <td>{{ event.dateLimitRegistration ? event.dateLimitRegistration|format_datetime(pattern="dd MMMM y à HH:mm", locale='fr') : '' }}</td>
+                <td>{{ event.dateStart ? event.dateStart|format_datetime(pattern="d MMMM y à HH:mm", locale='fr'): '' }}</td>
+                <td>{{ event.dateLimitRegistration ? event.dateLimitRegistration|format_datetime(pattern="d MMMM y à HH:mm", locale='fr') : '' }}</td>
                 <td>{{ event.participate.count }}/ {{ event.maxRegistration }}</td>
                 <td> <span class="badge rounded-pill
                                 {% if event.state.value == 'Ouverte' %}
-                                    bg-success
+                                    bg-success" title="Sortie Ouverte, inscrivez-vous ! "
                                 {% elseif event.state.value == 'Terminée' %}
-                                    bg-dark
+                                    bg-dark" title="Cette sortie est terminée !"
                                 {% elseif event.state.value == 'Historisée' %}
-                                    bg-secondary
+                                    bg-secondary" title="Cette sortie est terminée, c'est de l'histoire ancienne."
                                 {% elseif event.state.value == 'Annulée' %}
-                                    bg-danger
+                                    bg-danger" title="Oh non ! la sortie est annulée"
                                 {% elseif event.state.value == 'En cours' %}
-                                    bg-info
-                                {% elseif event.state.value == 'Clôturée' %}
-                                    bg-warning
+                                    bg-info" title="Cette sortie est en cours !"
                                 {% else %}
-                                    bg-primary
+                                    bg-warning" title="La sortie est clôturée, vous ne pouvez plus vous inscrire.."
                                 {% endif %}
-                                ">{{ event.state.value }}</span> </td>
+                                >{{ event.state.value }}</span> </td>
                 <td>
                         {% if app.user in event.participate %}
-                            <img src="{{ asset('img/icon/check.png')}}" width="25px">
+                            <img src="{{ asset('img/icon/register.png')}}" width="25px" title="Vous êtes inscrit à la sortie">
                         {% elseif app.user == event.eventOrganizer %}
-                            <img src="{{ asset('img/icon/owner.png')}}" width="25px">
+                            <img src="{{ asset('img/icon/owner.png')}}" width="25px" title="Vous êtes l'organisateur de la sortie">
                         {% endif %}
                 </td>
-                <td><a href="{{ path('app_user_show', {'id': event.eventOrganizer.id}) }}">
+                <td><a href="{{ path('app_user_show', {'id': event.eventOrganizer.id}) }} " title="voir le profil de {{ event.eventOrganizer.username }}">
                             {{ event.eventOrganizer.username }}
                     </a></td>
                 <td>
+
                     {% if app.user == event.eventOrganizer %}
-                    <a href="{{ path('app_event_edit', {'id': event.id}) }}"><img src="{{ asset('img/icon/construction.png')}}" width="25px"></a>
+                        <a href="{{ path('app_event_edit', {'id': event.id}) }}"><img src="{{ asset('img/icon/construction.png')}}" width="25px" title="Modifier la sortie"></a>
+                        <a href="{{ path('app_event_edit', {'id': event.id}) }}"><img src="{{ asset('img/icon/send.png')}}" width="25px" title="Publier la sortie"></a>
+                        <a href="{{ path('app_event_delete', {'id': event.id}) }}"><img src="{{ asset('img/icon/delete.png')}}" width="25px" title="Supprimer la sortie"></a>
+                    {% else %}
+                        <a href="{{ path('app_event_show', {'id': event.id}) }}"><img src="{{ asset('img/icon/view.png')}}" width="25px" title="Voir la sortie"></a>
+                            {% if app.user in event.participate %}
+                                <a href="{{ path('app_event_show', {'id': event.id}) }}"><img src="{{ asset('img/icon/signout.png')}}" width="25px" title="Se désinscrire de la sortie"></a>
+                            {% else %}
+                                <a href="{{ path('app_event_show', {'id': event.id}) }}"><img src="{{ asset('img/icon/register.png')}}" width="25px" title="S'inscrire à la sortie"></a>
+                            {% endif %}
                     {% endif %}
                 </td>
             </tr>
@@ -86,6 +76,5 @@
     </table>
     </div>
 
-
-    <a href="{{ path('app_event_new') }}">Create new</a>
+    <a href="{{ path('app_event_new') }}" class="btn btn-primary">Créer une sortie</a>
 {% endblock %}
