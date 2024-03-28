@@ -54,12 +54,9 @@
             'autocomplete' : 'campus'}
     }) }}
 
-
     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate')}}">
-
     <button type="submit" class="btn">Modifier</button>
     <a href="{{ path('app_event_index') }}">Retour</a>
-
 
 </div>
 {% endblock %}

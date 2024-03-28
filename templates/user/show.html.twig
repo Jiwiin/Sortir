@@ -8,10 +8,6 @@
     <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
-                <td>{{ user.id }}</td>
-            </tr>
-            <tr>
                 <th>Email</th>
                 <td>{{ user.email }}</td>
             </tr>
@@ -33,7 +29,7 @@
             </tr>
             <tr>
                 <th>Status</th>
-                <td>{{ user.status ? 'Active' : 'Non active' }}</td>
+                <td>{{ user.campus.name }}</td>
             </tr>
         </tbody>
     </table>
