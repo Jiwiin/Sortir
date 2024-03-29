@@ -5,11 +5,13 @@ namespace App\Controller;
 use App\Data\SearchData;
 use App\Entity\Campus;
 use App\Entity\Event;
+use App\Entity\Location;
 use App\Entity\User;
 use App\Form\EventType;
 use App\Form\SearchForm;
 use App\Repository\CampusRepository;
 use App\Repository\EventRepository;
+use App\Repository\LocationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -61,11 +63,21 @@ class EventController extends AbstractController
     }
 
     #[Route('/new', name: 'app_event_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, EntityManagerInterface $entityManager, LocationRepository $locationRepository): Response
     {
         $event = new Event();
         $form = $this->createForm(EventType::class, $event);
         $form->handleRequest($request);
+
+        //Récupère la liste des adresses
+        $locations = $entityManager->getRepository(Location::class)->findAll();
+        $locationsData = [];
+        foreach($locations as $location) {
+            $locationsData[$location->getId()] = [
+                'street' => $location->getStreet(),
+                'zipcode' => $location->getCity()->getZipcode(),
+            ];
+        }
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->persist($event);
@@ -77,6 +89,7 @@ class EventController extends AbstractController
         return $this->render('event/new.html.twig', [
             'event' => $event,
             'form' => $form,
+            'locationsData' => json_encode($locationsData),
         ]);
     }
 
