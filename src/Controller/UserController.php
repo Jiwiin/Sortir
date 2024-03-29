@@ -46,8 +46,12 @@ class UserController extends AbstractController
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
     public function show(User $user): Response
     {
+        // Vérifie si le profil de l'utilisateur est le même que celui consulté
+        $isOwnProfile = $this->getUser() === $user;
+
         return $this->render('user/show.html.twig', [
             'user' => $user,
+            'isOwnProfile' => $isOwnProfile,
         ]);
     }
 
