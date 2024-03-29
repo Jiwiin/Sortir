@@ -57,7 +57,8 @@
             </tr>
         </tbody>
     </table>
-
+    <br>
+    <h2>Participants</h2>
     <table class="table">
         <thead>
         <tr>
@@ -75,11 +76,8 @@
         </tbody>
     </table>
 
-    <form action="{{ path('inscription_a_levenement') }}" method="post">
-        <input type="hidden" name="eventId" value="{{ event.id }}">
-        <input type="hidden" name="userId" value="{{ participant.id }}">
-        <button type="submit">S'inscrire</button>
-    </form>
+    <a href="{{ path('app_event_subscription', {'id': event.id}) }}">S'inscrire à l'événement</a>
+
 
     <a href="{{ path('app_event_index') }}">back to list</a>
 

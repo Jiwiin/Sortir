@@ -7,6 +7,7 @@ use App\Entity\Campus;
 use App\Entity\Event;
 use App\Entity\Location;
 use App\Entity\User;
+use App\Enum\State;
 use App\Form\EventType;
 use App\Form\SearchForm;
 use App\Repository\CampusRepository;
@@ -23,6 +24,37 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/event')]
 class EventController extends AbstractController
 {
+    #[Route('/subscribe/{id}', name: 'app_event_subscription', methods: ['GET','POST'])]
+    public function eventInscription(int $id, EventRepository $eventRepository, Request $request, EntityManagerInterface $entityManager): Response
+    {
+        // Récupérer l'ID
+        /** @var User $user */
+        $user = $this->getUser();
+
+        // Vérifier si l'événement est en etat "ouvert"
+        $event = $eventRepository->find($id);
+        if (!$event)
+        {
+            throw $this->createNotFoundException('L\'utilisateur n\'existe pas');
+        }
+        if ($event->getState()== State::OUVERTE && $event->getEventOrganizer() !== $user )
+        {
+            $event->addParticipate($user);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_event_show', ['id'=>$id]);
+        }
+        // la date limite d'inscription ne soit pas dépassé
+
+        // nombre place maximum
+
+        //l'utilisateur n'est pas l'organisateur
+        //dans la vue
+
+   return $this->redirectToRoute('app_event_show', ['id'=>$id]);
+}
+
+
     #[Route('/', name: 'app_event_index', methods: ['GET'])]
     public function index(EventRepository $eventRepository, EntityManagerInterface $entityManager,  CampusRepository $campusRepository, Request $request): Response
     {
