@@ -2,42 +2,68 @@
 
 namespace App\Form;
 
+
 use App\Entity\Event;
 use App\Entity\Location;
-use App\Entity\User;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\TextareaType;
+use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Range;
 
 class EventType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('name')
+            ->add('name', TextType::class, [
+                'label' => 'Nom de la sortie',
+                'required' => true,
+            ])
             ->add('dateStart', null, [
                 'widget' => 'single_text',
+                'label' => 'Date et heure de la sortie',
+                'required' => true,
             ])
-            ->add('duration')
             ->add('dateLimitRegistration', null, [
                 'widget' => 'single_text',
+                'label' => 'Date limite d\'inscription',
+                'required' => true,
             ])
-            ->add('maxRegistration')
-            ->add('eventInfo')
+            ->add('maxRegistration', null, [
+                'label' => 'Nombre de places',
+                'data' =>1,
+                'required' => true,
+                'constraints' => [
+                    new Range([
+                        'min' => 1,
+                        'max' => 1500,
+                        'minMessage' => 'Le nombre de participants doit être au minimum {{ limit }}',
+                        'maxMessage' => 'Le nombre de participants doit être au maximum {{ limit }}',
+                    ]),
+                ],
+            ])
+            ->add('duration', null, [
+                'label' => 'Durée (en minutes)',
+                'data' => 60,
+                'required' => true,
+            ])
             ->add('location', EntityType::class, [
+                'label' => 'Lieu',
                 'class' => Location::class,
-                'choice_label' => 'id',
+                'choice_label' => 'name',
             ])
-            ->add('eventOrganizer', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'id',
+            ->add('eventInfo', TextareaType::class, [
+                'label' => 'Description et infos',
+                'required' => false,
             ])
-            ->add('participate', EntityType::class, [
-                'class' => User::class,
-                'choice_label' => 'id',
-                'multiple' => true,
+            ->add('state', SubmitType::class, [
+                'label'=> 'Publier'
             ])
+
         ;
     }
 

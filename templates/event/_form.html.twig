@@ -1,4 +1,100 @@
-{{ form_start(form) }}
-    {{ form_widget(form) }}
-    <button class="btn">{{ button_label|default('Save') }}</button>
-{{ form_end(form) }}
+<div class="container">
+    {{ form_start(form) }}
+    <div class="row">
+        <div class="col-md-5">
+            <div class="form-group row">
+                <label class="col-md-6 col-form-label">
+                    {{ form_label(form.name) }}
+                </label>
+                <div class="col-md-6">
+                    {{ form_widget(form.name) }}
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-6 col-form-label" for="{{ form.dateStart.vars.id }}">
+                    {{ form_label(form.dateStart) }}
+                </label>
+                <div class="col-md-6">
+                    {{ form_widget(form.dateStart) }}
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-6 col-form-label">
+                    {{ form_label(form.dateLimitRegistration) }}
+                </label>
+                <div class="col-md-6">
+                    {{ form_widget(form.dateLimitRegistration) }}
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-6 col-form-label">
+                    {{ form_label(form.maxRegistration) }}
+                </label>
+                <div class="col-md-3">
+                    {{ form_widget(form.maxRegistration) }}
+                </div>
+            </div>
+            <div class="form-group row">
+                <label class="col-md-6 col-form-label">
+                    {{ form_label(form.duration) }}
+                </label>
+                <div class="col-md-3">
+                    {{ form_widget(form.duration) }}
+                </div>
+            </div>
+        </div>
+        <div class="col-md-5">
+            <div class="row">
+                <div class="form-group row">
+                    <label class="col-md-7 col-form-label">
+                        Campus
+                    </label>
+                    <div class="col-md-5">
+                        {{ app.user.campus.name }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-7 col-form-label">
+                        {{ form_label(form.location) }}
+                    </label>
+                    <div class="col-md-5">
+                        {{ form_widget(form.location) }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-7 col-form-label">
+                        Rue
+                    </label>
+                    <div id="location-street" class="col-md-5">
+
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-7 col-form-label">
+                        Code Postal
+                    </label>
+                    <div id="location-zipcode" class="col-md-5">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-10">
+            <div class="form-group row">
+                <label class="col-md-3 col-form-label">
+                    {{ form_label(form.eventInfo) }}
+                </label>
+                <div class="col-md-9">
+                    {{ form_widget(form.eventInfo) }}
+                </div>
+            </div>
+        </div>
+        <div class="pt-3 d-flex align-items-center justify-content-center">
+            <div class="me-2"><button class="btn btn-primary">Enregistrer</button></div>
+            <div class="mx-2">{{ form_widget(form.state) }}</div>
+            <div class="ms-2"><a href="{{ path('app_event_index') }}" class="btn btn-primary">Retour à la liste</a></div>
+        </div>
+    </div>
+    {{ form_end(form) }}
+</div>
+
