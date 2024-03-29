@@ -75,6 +75,12 @@
         </tbody>
     </table>
 
+    <form action="{{ path('inscription_a_levenement') }}" method="post">
+        <input type="hidden" name="eventId" value="{{ event.id }}">
+        <input type="hidden" name="userId" value="{{ participant.id }}">
+        <button type="submit">S'inscrire</button>
+    </form>
+
     <a href="{{ path('app_event_index') }}">back to list</a>
 
     <a href="{{ path('app_event_edit', {'id': event.id}) }}">edit</a>
