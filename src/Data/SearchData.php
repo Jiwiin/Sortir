@@ -11,6 +11,7 @@ class SearchData
 
     public ?Campus $campus = null;
 
+    public ?User $user = null;
     public bool $organized = false;
 
     public bool $registered = false;

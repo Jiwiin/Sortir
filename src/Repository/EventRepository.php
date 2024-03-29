@@ -24,32 +24,6 @@ class EventRepository extends ServiceEntityRepository
         parent::__construct($registry, Event::class);
     }
 
-
-
-    //    /**
-    //     * @return Event[] Returns an array of Event objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('e')
-    //            ->andWhere('e.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('e.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Event
-    //    {
-    //        return $this->createQueryBuilder('e')
-    //            ->andWhere('e.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
     public function findByCampusOrganizer($campusId)
     {
         return $this->createQueryBuilder('e')
@@ -93,31 +67,39 @@ class EventRepository extends ServiceEntityRepository
 
         if($search->organized) {
             $query
-                ->andWhere('e.eventOrganizer = :organizerId')
-                ->setParameter('organizerId', $search->organized);
+                ->andWhere('e.eventOrganizer = :organizer')
+                ->setParameter('organizer', $search->user);
         }
 
         if($search->registered) {
             $query
-                ->join('e.participate', 'p')
-                ->andWhere('p.id NOT IN :participateId')
-                ->setParameter('participateId', $search->registered);
+                ->andWhere(':user MEMBER OF e.participate')
+                ->setParameter('user', $search->user);
         }
 
-        /*if ($search->notRegistered) {
+        if ($search->notRegistered) {
             $query
-                ->leftJoin('e.participate', 'np')
-                ->andWhere('np.id != :noParticipateId')
-                ->setParameter('noParticipateId', $search->notRegistered);
-        }*/
+                ->andWhere(':user NOT MEMBER OF e.participate')
+                ->setParameter('user', $search->user);
+        }
 
         if($search->eventCompleted) {
             $query
                 ->andWhere('e.dateStart < :now')
                 ->setParameter('now', new \DateTime());
         }
+        //Ordre affichage
         $query
-            ->orderBy('e.dateLimitRegistration', 'ASC');
+            ->addSelect("
+        CASE
+            WHEN e.eventOrganizer = :user THEN 1
+            WHEN :user MEMBER OF e.participate THEN 2
+            ELSE 3
+        END AS HIDDEN priority
+    ")
+            ->setParameter('user', $search->user)
+            ->orderBy('priority', 'ASC')
+            ->addOrderBy('e.dateLimitRegistration', 'ASC');
 
         return $query->getQuery()->getResult();
     }
