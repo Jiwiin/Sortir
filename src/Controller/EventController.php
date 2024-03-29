@@ -48,6 +48,7 @@ class EventController extends AbstractController
             $data->campus = $user->getCampus();
         }
 
+        //Ajout de l'utilisateur connecté dans le SearchData
         $data->user = $user;
         $events = $eventRepository->findSearch($data);
 
