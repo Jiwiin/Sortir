@@ -7,6 +7,7 @@
                     {{ form_label(form.name) }}
                 </label>
                 <div class="col-md-6">
+                    {{ form_errors(form.name) }}
                     {{ form_widget(form.name) }}
                 </div>
             </div>
@@ -15,6 +16,7 @@
                     {{ form_label(form.dateStart) }}
                 </label>
                 <div class="col-md-6">
+                    {{ form_errors(form.dateStart) }}
                     {{ form_widget(form.dateStart) }}
                 </div>
             </div>
@@ -23,6 +25,7 @@
                     {{ form_label(form.dateLimitRegistration) }}
                 </label>
                 <div class="col-md-6">
+                    {{ form_errors(form.dateLimitRegistration) }}
                     {{ form_widget(form.dateLimitRegistration) }}
                 </div>
             </div>
@@ -31,6 +34,7 @@
                     {{ form_label(form.maxRegistration) }}
                 </label>
                 <div class="col-md-3">
+                    {{ form_errors(form.maxRegistration) }}
                     {{ form_widget(form.maxRegistration) }}
                 </div>
             </div>
@@ -39,6 +43,7 @@
                     {{ form_label(form.duration) }}
                 </label>
                 <div class="col-md-3">
+                    {{ form_errors(form.duration) }}
                     {{ form_widget(form.duration) }}
                 </div>
             </div>
@@ -58,6 +63,7 @@
                         {{ form_label(form.location) }}
                     </label>
                     <div class="col-md-5">
+                        {{ form_errors(form.location) }}
                         {{ form_widget(form.location) }}
                     </div>
                 </div>
@@ -85,13 +91,14 @@
                     {{ form_label(form.eventInfo) }}
                 </label>
                 <div class="col-md-9">
+                    {{ form_errors(form.eventInfo) }}
                     {{ form_widget(form.eventInfo) }}
                 </div>
             </div>
         </div>
         <div class="pt-3 d-flex align-items-center justify-content-center">
-            <div class="me-2"><button class="btn btn-primary">Enregistrer</button></div>
-            <div class="mx-2">{{ form_widget(form.state) }}</div>
+            <div class="mx-2">{{ form_widget(form.save) }}</div>
+            <div class="mx-2">{{ form_widget(form.publish) }}</div>
             <div class="ms-2"><a href="{{ path('app_event_index') }}" class="btn btn-primary">Retour à la liste</a></div>
         </div>
     </div>

@@ -9,6 +9,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Validator\Context\ExecutionContextInterface;
 
 #[ORM\Entity(repositoryClass: EventRepository::class)]
 class Event
@@ -24,25 +25,33 @@ class Event
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Assert\NotBlank]
+    #[Assert\GreaterThanOrEqual('today', message: 'La date ne doit pas être antérieur à la date du jour')]
     private ?\DateTimeInterface $dateStart = null;
 
     #[ORM\Column]
     #[Assert\NotBlank]
+    #[Assert\Range(
+        min: 60,
+        max: 43200,
+        notInRangeMessage: 'La durée doit être comprise entre 60 minutes et 4300 minutes (30 jours).',
+    )]
     private ?int $duration = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
     #[Assert\NotBlank]
+    #[Assert\Expression(
+        expression: "this.getDateLimitRegistration() < this.getDateStart()",
+        message: "La date de limite d'inscription doit se terminer avant le début de la sortie et après la date du jour."
+    )]
+    #[Assert\GreaterThanOrEqual('today', message: 'La date ne doit pas être antérieur à la date du jour')]
     private ?\DateTimeInterface $dateLimitRegistration = null;
 
     #[ORM\Column]
     #[Assert\NotBlank]
-    #[Assert\GreaterThanOrEqual(
-        value: 1,
-        message: 'minimum 1 participant',
-    )]
-    #[Assert\LessThanOrEqual(
-        value:  1500,
-        message: 'maximum 1500 participants',
+    #[Assert\Range(
+        min: 2,
+        max: 2800,
+        notInRangeMessage: 'Le nombre de place doit être compris entre 2 et 2800 participants.',
     )]
     private ?int $maxRegistration = null;
 
@@ -63,6 +72,7 @@ class Event
 
     #[ORM\Column(length: 255, enumType: State::class)]
     private ?State $state = null;
+
 
     public function __construct()
     {

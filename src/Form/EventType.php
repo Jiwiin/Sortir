@@ -35,16 +35,8 @@ class EventType extends AbstractType
             ])
             ->add('maxRegistration', null, [
                 'label' => 'Nombre de places',
-                'data' =>1,
+                'data' =>2,
                 'required' => true,
-                'constraints' => [
-                    new Range([
-                        'min' => 1,
-                        'max' => 1500,
-                        'minMessage' => 'Le nombre de participants doit être au minimum {{ limit }}',
-                        'maxMessage' => 'Le nombre de participants doit être au maximum {{ limit }}',
-                    ]),
-                ],
             ])
             ->add('duration', null, [
                 'label' => 'Durée (en minutes)',
@@ -60,10 +52,12 @@ class EventType extends AbstractType
                 'label' => 'Description et infos',
                 'required' => false,
             ])
-            ->add('state', SubmitType::class, [
-                'label'=> 'Publier'
+            ->add('save', SubmitType::class, [
+                'label'=> 'Enregistrer',
             ])
-
+            ->add('publish', SubmitType::class, [
+                'label'=> 'Publier',
+            ])
         ;
     }
 

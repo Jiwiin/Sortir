@@ -15,6 +15,7 @@ use App\Repository\EventRepository;
 use App\Repository\LocationRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -101,6 +102,9 @@ class EventController extends AbstractController
         $form = $this->createForm(EventType::class, $event);
         $form->handleRequest($request);
 
+        /** @var User $user */
+        $user = $this->getUser();
+
         //Récupère la liste des adresses
         $locations = $entityManager->getRepository(Location::class)->findAll();
         $locationsData = [];
@@ -112,10 +116,19 @@ class EventController extends AbstractController
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
+
+            if ($form->get('save')->isClicked()){
+                $event->setState(State::EN_CREATION);
+            } elseif($form->get('publish')->isClicked()) {
+                $event->setState(State::OUVERTE);
+            }
+
+            $event->setEventOrganizer($user);
+            $event->addParticipate($user);
             $entityManager->persist($event);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_event_show', ['id' => $event->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('event/new.html.twig', [

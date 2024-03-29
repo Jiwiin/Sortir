@@ -1,14 +1,15 @@
-/* Navbar */
+/*
+!* Navbar *!
 .navbar {
     color: #E4EFEF;
     position: sticky;
 }
 .navbar-nav .nav-link {
-    color: #6283DF; /* Couleur des liens par défaut */
+    color: #6283DF; !* Couleur des liens par défaut *!
 }
 
 .navbar-nav .nav-link:hover {
-    color: #FFF; /* Couleur des liens au survol */
+    color: #FFF; !* Couleur des liens au survol *!
 }
 .navbar-brand {
     float:left;
@@ -28,20 +29,23 @@
 }
 
 
-/* Header */
+!* Header *!
 header {
     padding: 20px;
     text-align: center;
 }
+*/
 
 /* Body */
 body {
-    color: #E4EFEF;
+    /*color: #E4EFEF;
     background-color: #6283DF;
-    padding-top: 70px;
+    padding-top: 70px;*/
+    background-color: skyblue;
 }
+/*
 
-/* Footer */
+!* Footer *!
 footer {
     background-color: #6283DF;
     color: #E4EFEF;
@@ -60,3 +64,4 @@ footer img {
 .eventlist-table img {
     padding-right: 5px;
 }
+*/
