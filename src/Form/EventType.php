@@ -3,17 +3,16 @@
 namespace App\Form;
 
 
-use App\Entity\City;
 use App\Entity\Event;
 use App\Entity\Location;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
 use Symfony\Component\Form\AbstractType;
-use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\Extension\Core\Type\TextType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use Symfony\Component\Validator\Constraints\Range;
 
 class EventType extends AbstractType
 {
@@ -36,7 +35,16 @@ class EventType extends AbstractType
             ])
             ->add('maxRegistration', null, [
                 'label' => 'Nombre de places',
+                'data' =>1,
                 'required' => true,
+                'constraints' => [
+                    new Range([
+                        'min' => 1,
+                        'max' => 1500,
+                        'minMessage' => 'Le nombre de participants doit être au minimum {{ limit }}',
+                        'maxMessage' => 'Le nombre de participants doit être au maximum {{ limit }}',
+                    ]),
+                ],
             ])
             ->add('duration', null, [
                 'label' => 'Durée (en minutes)',
@@ -47,9 +55,6 @@ class EventType extends AbstractType
                 'label' => 'Lieu',
                 'class' => Location::class,
                 'choice_label' => 'name',
-                'attr' => [
-                    'id' => 'form_location'
-                ]
             ])
             ->add('eventInfo', TextareaType::class, [
                 'label' => 'Description et infos',

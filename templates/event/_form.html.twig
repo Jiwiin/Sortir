@@ -71,7 +71,7 @@
                 </div>
                 <div class="form-group row">
                     <label class="col-md-7 col-form-label">
-                        Code postal
+                        Code Postal
                     </label>
                     <div id="location-zipcode" class="col-md-5">
 
@@ -97,25 +97,4 @@
     </div>
     {{ form_end(form) }}
 </div>
-
-<script>
-    let locationsData = {{ locationsData|raw }};
-</script>
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const locationSelect = document.querySelector('#event_location');
-        const streetDisplay = document.getElementById('location-street'); // Assurez-vous d'avoir cet élément dans votre HTML
-        const zipcodeDisplay = document.getElementById('location-zipcode'); // Idem pour celui-ci
-
-        locationSelect.addEventListener('change', function() {
-            const selectedLocationId = this.value;
-            const locationInfo = locationsData[selectedLocationId];
-
-            if (locationInfo) {
-                streetDisplay.textContent = locationInfo.street;
-                zipcodeDisplay.textContent = locationInfo.zipcode;
-            }
-        });
-    });
-</script>
 
