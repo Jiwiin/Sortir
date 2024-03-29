@@ -3,38 +3,75 @@
 {% block title %}Event{% endblock %}
 
 {% block body %}
-    <h1>Event</h1>
+    <h1>Sortie</h1>
 
     <table class="table">
         <tbody>
             <tr>
-                <th>Id</th>
-                <td>{{ event.id }}</td>
-            </tr>
-            <tr>
-                <th>Name</th>
+                <th>Nom de la sortie</th>
                 <td>{{ event.name }}</td>
             </tr>
             <tr>
-                <th>DateStart</th>
+                <th>Date et heure de la sortie</th>
                 <td>{{ event.dateStart ? event.dateStart|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
             <tr>
-                <th>Duration</th>
-                <td>{{ event.duration }}</td>
+                <th>Durée</th>
+                <td>{{ event.duration }} minutes</td>
             </tr>
             <tr>
-                <th>DateLimitRegistration</th>
+                <th>Date limite d'inscription</th>
                 <td>{{ event.dateLimitRegistration ? event.dateLimitRegistration|date('Y-m-d H:i:s') : '' }}</td>
             </tr>
             <tr>
-                <th>MaxRegistration</th>
+                <th>Nombre de places</th>
                 <td>{{ event.maxRegistration }}</td>
             </tr>
             <tr>
-                <th>EventInfo</th>
+                <th>Description et infos</th>
                 <td>{{ event.eventInfo }}</td>
             </tr>
+            <tr>
+                <th>Campus</th>
+                <td>{{ event.eventOrganizer.campus.name }}</td>
+            </tr>
+            <tr>
+                <th>Lieu</th>
+                <td>{{ event.location.name }}</td>
+            </tr>
+            <tr>
+                <th>Rue</th>
+                <td>{{ event.location.street }}</td>
+            </tr>
+            <tr>
+                <th>Code postal</th>
+                <td>{{ event.location.city.zipcode }}</td>
+            </tr>
+            <tr>
+                <th>Latitude</th>
+                <td>{{ event.location.latitude }}</td>
+            </tr>
+            <tr>
+                <th>Latitude</th>
+                <td>{{ event.location.longitude }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table">
+        <thead>
+        <tr>
+            <th>Pseudo</th>
+            <th>Nom des participants</th>
+        </tr>
+        </thead>
+        <tbody>
+        {% for participant in event.participate %}
+            <tr>
+                <td><a href="{{ path('app_user_show', {'id': participant.id}) }}">{{ participant.username }}</a></td>
+                <td>{{ participant.firstName }} {{ participant.lastName }}</td>
+            </tr>
+        {% endfor %}
         </tbody>
     </table>
 
