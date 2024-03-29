@@ -57,7 +57,8 @@
             </tr>
         </tbody>
     </table>
-
+    <br>
+    <h2>Participants</h2>
     <table class="table">
         <thead>
         <tr>
@@ -74,6 +75,9 @@
         {% endfor %}
         </tbody>
     </table>
+
+    <a href="{{ path('app_event_subscription', {'id': event.id}) }}">S'inscrire à l'événement</a>
+
 
     <a href="{{ path('app_event_index') }}">back to list</a>
 
