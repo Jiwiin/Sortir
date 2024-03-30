@@ -55,8 +55,8 @@
     }) }}
 
     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate')}}">
-    <button type="submit" class="btn">Modifier</button>
-    <a href="{{ path('app_event_index') }}">Retour</a>
+    <button type="submit" class="btn btn-primary">Modifier</button>
+    <a href="{{ path('app_event_index') }}" class="btn btn-primary">Retour</a>
 
 </div>
 {% endblock %}

@@ -41,11 +41,11 @@
     </table>
     {% if isOwnProfile %}
         {% if is_granted('ROLE_ADMIN') %}
-            <a href="{{ path('app_user_index') }}">User managing</a>
+            <a href="{{ path('app_user_index') }}" class="btn btn-primary">User managing</a>
         {% else %}
-            <a href="{{ path('app_event_index') }}">back to list</a>
+            <a href="{{ path('app_event_index') }}" class="btn btn-primary">back to list</a>
         {% endif %}
-            <a href="{{ path('app_user_edit', {'id': user.id}) }}">edit</a>
+            <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-primary">edit</a>
 
         {{ include('user/_delete_form.html.twig') }}
 
