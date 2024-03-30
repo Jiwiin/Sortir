@@ -1,6 +1,6 @@
 
 //Dynamiser l'adresse et le code postal
-
+    console.log("jsuis dans le script")
     const locationSelect = document.querySelector('#event_location');
     const streetDisplay = document.getElementById('location-street');
     const zipcodeDisplay = document.getElementById('location-zipcode');

@@ -96,7 +96,7 @@ class EventController extends AbstractController
     }
 
     #[Route('/new', name: 'app_event_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager, LocationRepository $locationRepository): Response
+    public function new(Request $request, EntityManagerInterface $entityManager): Response
     {
         $event = new Event();
         $form = $this->createForm(EventType::class, $event);
@@ -149,18 +149,37 @@ class EventController extends AbstractController
     #[Route('/{id}/edit', name: 'app_event_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, Event $event, EntityManagerInterface $entityManager): Response
     {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if($event->getEventOrganizer() != $user ) {
+            return $this->redirectToRoute('app_event_show', ['id' => $event->getId()], Response::HTTP_SEE_OTHER);
+        }
+
+        //Récupère la liste des adresses
+        $locations = $entityManager->getRepository(Location::class)->findAll();
+        $locationsData = [];
+        foreach($locations as $location) {
+            $locationsData[$location->getId()] = [
+                'street' => $location->getStreet(),
+                'zipcode' => $location->getCity()->getZipcode(),
+            ];
+        }
+
+
         $form = $this->createForm(EventType::class, $event);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_event_show', ['id' => $event->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('event/edit.html.twig', [
             'event' => $event,
             'form' => $form,
+            'locationsData' => json_encode($locationsData),
         ]);
     }
 
