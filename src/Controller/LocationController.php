@@ -2,8 +2,11 @@
 
 namespace App\Controller;
 
+use App\Repository\CityRepository;
 use App\Repository\LocationRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -17,4 +20,24 @@ class LocationController extends AbstractController
             'locations' => $locationRepository->findAll(),
         ]);
     }
+
+    #[Route('/get-locations/{cityId}', name:'get_locations_for_city', methods: ['GET'])]
+    public function getLocationsForCity($cityId, LocationRepository $locationRepository): Response
+    {
+        //Récupère toutes les villes et les lieux
+        $locations = $locationRepository->findByCityId($cityId);
+        $locationsArray = [];
+
+        foreach ($locations as $location) {
+            $locationsArray[] = [
+                'id' => $location->getId(),
+                'name' => $location->getName(),
+                'street' => $location->getStreet(),
+                'zipcode' => $location->getCity()->getZipCode(),
+            ];
+        }
+        return new JsonResponse($locationsArray);
+    }
+
+
 }

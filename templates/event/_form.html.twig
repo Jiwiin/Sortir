@@ -60,6 +60,15 @@
                 </div>
                 <div class="form-group row">
                     <label class="col-md-7 col-form-label">
+                        {{ form_label(form.city) }}
+                    </label>
+                    <div class="col-md-5">
+                        {{ form_errors(form.city) }}
+                        {{ form_widget(form.city) }}
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <label class="col-md-7 col-form-label">
                         {{ form_label(form.location) }}
                     </label>
                     <div class="col-md-5">
@@ -104,6 +113,55 @@
     </div>
     {{ form_end(form) }}
 </div>
+
+<script>
+    //Récupère les éléments ville et lieu
+    var citySelect = document.getElementById('event_city');
+    var locationSelect = document.getElementById('event_location');
+
+    // Fonction pour mettre à jour les options disponibles dans le sélecteur de lieu.
+    function updateLocationOptions(locations) {
+        // Efface toutes les options précédentes du sélecteur de lieu.
+        locationSelect.options.length = 0;
+        // Vérifie si la liste des lieux n'est pas vide.
+        if (locations.length > 0) {
+            // Pour chaque lieu dans la liste, crée une nouvelle option dans le sélecteur de lieu.
+            locations.forEach(function(location) {
+                // S'il n'y a pas de lieux disponibles, ajoute une option "Aucun lieu".
+                var option = new Option(location.name, location.id);
+                locationSelect.options.add(option);
+            });
+        } else {
+            var noOption = new Option('Aucun lieu', '');
+            // Réactive la sélection de lieu pour permettre à l'utilisateur de choisir.
+            locationSelect.options.add(noOption);
+        }
+        locationSelect.disabled = false; // réactive la selection du lieu après selection de la ville
+    }
+
+    // Ajoute un gestionnaire d'événement pour détecter le changement de sélection de la ville.
+    citySelect.onchange = function () {
+        // Vérifie si une ville est sélectionnée.
+        if (this.value) {
+            // Fetch pour obtenir les lieux associés à la ville sélectionnée.
+            fetch(`/location/get-locations/${this.value}`)
+                .then(response => response.json())
+                .then(data => {
+                    // Met à jour les options du sélecteur de lieu avec les données reçues.
+                    updateLocationOptions(data);
+                })
+                .catch(error => console.error('Error:', error));
+        } else {
+            // Si aucune ville n'est sélectionnée, désactive la sélection de lieu et affiche "Aucun lieu".
+            locationSelect.disabled = true;
+            updateLocationOptions([]);
+        }
+    };
+</script>
+
+
+
+
 
 
 

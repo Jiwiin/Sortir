@@ -13,6 +13,7 @@ use App\Form\SearchForm;
 use App\Repository\CampusRepository;
 use App\Repository\EventRepository;
 use App\Repository\LocationRepository;
+use App\Services\LocationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\Form\FormError;
@@ -131,7 +132,7 @@ class EventController extends AbstractController
     }
 
     #[Route('/new', name: 'app_event_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
+    public function new(Request $request, LocationService $locationService, EntityManagerInterface $entityManager): Response
     {
         $event = new Event();
         $form = $this->createForm(EventType::class, $event);
@@ -140,15 +141,7 @@ class EventController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
-        //Récupère la liste des adresses
-        $locations = $entityManager->getRepository(Location::class)->findAll();
-        $locationsData = [];
-        foreach($locations as $location) {
-            $locationsData[$location->getId()] = [
-                'street' => $location->getStreet(),
-                'zipcode' => $location->getCity()->getZipcode(),
-            ];
-        }
+        /*$locationsList = $locationService->getAllLocationsAndCities();*/
 
         if ($form->isSubmitted() && $form->isValid()) {
 
@@ -167,9 +160,8 @@ class EventController extends AbstractController
         }
 
         return $this->render('event/new.html.twig', [
-            'event' => $event,
             'form' => $form,
-            'locationsData' => json_encode($locationsData),
+            /*'locationsListJson' => json_encode($locationsList),*/
         ]);
     }
 

@@ -9,15 +9,3 @@
     {% include 'event/_form.html.twig' with {form: form} only %}
 
 {% endblock %}
-
-{% block javascripts %}
-    {{ parent() }}
-    <script>
-        let locationsData = {{ locationsData|raw }};
-    </script>
-    <script defer src="{{ asset('script/event-locations.js') }}"></script>
-{% endblock%}
-
-
-
-

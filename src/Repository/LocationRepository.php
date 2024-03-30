@@ -21,6 +21,15 @@ class LocationRepository extends ServiceEntityRepository
         parent::__construct($registry, Location::class);
     }
 
+    public function findByCityId($cityId)
+    {
+        return $this->createQueryBuilder('l')
+            ->where('l.city = :cityId')
+            ->setParameter('cityId', $cityId)
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return Location[] Returns an array of Location objects
     //     */

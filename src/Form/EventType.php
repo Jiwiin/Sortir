@@ -3,6 +3,7 @@
 namespace App\Form;
 
 
+use App\Entity\City;
 use App\Entity\Event;
 use App\Entity\Location;
 use Symfony\Bridge\Doctrine\Form\Type\EntityType;
@@ -43,10 +44,22 @@ class EventType extends AbstractType
                 'data' => 60,
                 'required' => true,
             ])
+            ->add('city', EntityType::class, [
+                'label' => 'Ville',
+                'choice_label' => 'name',
+                'placeholder' => 'Sélectionnez une ville',
+                'class' => City::class,
+                'mapped' => false,
+                'required' => true,
+            ])
             ->add('location', EntityType::class, [
                 'label' => 'Lieu',
+                'placeholder' => 'Sélectionnez un lieu',
                 'class' => Location::class,
                 'choice_label' => 'name',
+                'attr' => [
+                    'disabled' => 'disabled'
+                ]
             ])
             ->add('eventInfo', TextareaType::class, [
                 'label' => 'Description et infos',
