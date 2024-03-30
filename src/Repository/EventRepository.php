@@ -104,14 +104,4 @@ class EventRepository extends ServiceEntityRepository
         return $query->getQuery()->getResult();
     }
 
-    public function findUserIdsByEventId($eventId)
-    {
-        return $this->createQueryBuilder('e')
-            ->select('u.id')
-            ->innerJoin('e.participate', 'u')
-            ->where('e.id = :eventId')
-            ->setParameter('eventId', $eventId)
-            ->getQuery()
-            ->getResult();
-    }
 }

@@ -19,7 +19,7 @@ use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-
+use function PHPUnit\Framework\throwException;
 
 
 #[Route('/event')]
@@ -31,6 +31,7 @@ class EventController extends AbstractController
         // Récupérer l'ID
         /** @var User $user */
         $user = $this->getUser();
+        $currentDateTime = new \DateTime();
 
         // Vérifier si l'événement est en etat "ouvert"
         $event = $eventRepository->find($id);
@@ -38,6 +39,20 @@ class EventController extends AbstractController
         {
             throw $this->createNotFoundException('L\'utilisateur n\'existe pas');
         }
+
+        // Verifier si la date limite d'inscription ne soit pas dépassé
+        if ($event->getDateLimitRegistration() < $currentDateTime)
+        {
+            throw $this->createNotFoundException('La date limite d\'inscription est dépassée');
+        }
+
+        // verifier si le nombre place maximum n'est pas atteint
+        if ($event->getParticipate()->count() >= $event->getMaxRegistration())
+        {
+            throw $this->createNotFoundException('Le nombre limite de participant est atteint');
+        }
+
+        //Vérif si état "ouvert" et si organisateur
         if ($event->getState()== State::OUVERTE && $event->getEventOrganizer() !== $user )
         {
             $event->addParticipate($user);
@@ -45,12 +60,7 @@ class EventController extends AbstractController
 
             return $this->redirectToRoute('app_event_show', ['id'=>$id]);
         }
-        // la date limite d'inscription ne soit pas dépassé
 
-        // nombre place maximum
-
-        //l'utilisateur n'est pas l'organisateur
-        //dans la vue
 
    return $this->redirectToRoute('app_event_show', ['id'=>$id]);
 }
