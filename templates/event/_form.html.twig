@@ -118,17 +118,25 @@
     //Récupère les éléments ville et lieu
     var citySelect = document.getElementById('event_city');
     var locationSelect = document.getElementById('event_location');
+    var streetDisplay = document.getElementById('location-street');
+    var zipcodeDisplay = document.getElementById('location-zipcode');
 
     // Fonction pour mettre à jour les options disponibles dans le sélecteur de lieu.
     function updateLocationOptions(locations) {
         // Efface toutes les options précédentes du sélecteur de lieu.
         locationSelect.options.length = 0;
+
+        var defaultOption = new Option('Choisissez un lieu', '');
+        locationSelect.options.add(defaultOption);
+
         // Vérifie si la liste des lieux n'est pas vide.
         if (locations.length > 0) {
             // Pour chaque lieu dans la liste, crée une nouvelle option dans le sélecteur de lieu.
             locations.forEach(function(location) {
                 // S'il n'y a pas de lieux disponibles, ajoute une option "Aucun lieu".
                 var option = new Option(location.name, location.id);
+                option.dataset.street = location.street;
+                option.dataset.zipcode = location.zipcode;
                 locationSelect.options.add(option);
             });
         } else {
@@ -139,7 +147,7 @@
         locationSelect.disabled = false; // réactive la selection du lieu après selection de la ville
     }
 
-    // Ajoute un gestionnaire d'événement pour détecter le changement de sélection de la ville.
+    // Evénement détecte le changement de sélection de la ville.
     citySelect.onchange = function () {
         // Vérifie si une ville est sélectionnée.
         if (this.value) {
@@ -151,10 +159,35 @@
                     updateLocationOptions(data);
                 })
                 .catch(error => console.error('Error:', error));
+            // Efface les informations d'adresse et de code postal
+            streetDisplay.textContent = '';
+            zipcodeDisplay.textContent = '';
         } else {
-            // Si aucune ville n'est sélectionnée, désactive la sélection de lieu et affiche "Aucun lieu".
+            // Désactive le sélecteur de lieu et efface les options
             locationSelect.disabled = true;
-            updateLocationOptions([]);
+            locationSelect.options.length = 0;
+            var defaultOption = new Option('Choisissez un lieu', '');
+            locationSelect.options.add(defaultOption);
+
+            // Efface les informations d'adresse et de code postal
+            streetDisplay.textContent = '';
+            zipcodeDisplay.textContent = '';
+        }
+    };
+    // Evénements détecte le changement de sélection du lieu
+    locationSelect.onchange = function () {
+        // Récupère l'option sélectionnée
+        var selectedOption = this.options[this.selectedIndex];
+
+        // Vérifie si une option valide est sélectionnée (i.e., si elle a une valeur)
+        if (selectedOption.value) {
+            // Met à jour les éléments HTML avec la rue et le code postal du lieu sélectionné
+            streetDisplay.textContent = selectedOption.dataset.street || '';
+            zipcodeDisplay.textContent = selectedOption.dataset.zipcode || '';
+        } else {
+            // Efface les informations d'adresse et de code postal
+            streetDisplay.textContent = '';
+            zipcodeDisplay.textContent = '';
         }
     };
 </script>
