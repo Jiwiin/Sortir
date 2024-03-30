@@ -14,3 +14,11 @@
         <a class="nav-link" href="{{ path('app_logout') }}" title="">Se déconnecter ({{ app.user.username }})</a>
     </li>
 </ul>
+{% if app.request.requestUri == '/event/' %}
+    <div class="container d-flex justify-content-end">
+        <div class="d-flex flex-column align-items-end">
+            <p>Date du jour : <strong>{{ "now"|format_datetime(pattern="d MMMM y", locale='fr') }}</strong></p>
+            <p>Participant : <strong>{{ app.user.username }}</strong></p>
+        </div>
+    </div>
+{% endif %}
