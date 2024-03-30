@@ -99,14 +99,14 @@ class EventController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        // filtre form
-        $data = new SearchData();
-        $form = $this->createForm(SearchForm::class, $data);
-        $form->handleRequest($request);
-
         /** @var User $user */
         //Vérifie si l'utilisateur connecté est une instance de User afin de récupérer son campus
         $user = $this->getUser();
+
+        // filtre form
+        $data = new SearchData();
+        $form = $this->createForm(SearchForm::class, $data, [ 'selectedCampus' => $user->getCampus()]);
+        $form->handleRequest($request);
 
         //Récupère l'id du campus envoyé dans l'url
         $campusId = $request->query->get('campus');
@@ -141,8 +141,6 @@ class EventController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
 
-        /*$locationsList = $locationService->getAllLocationsAndCities();*/
-
         if ($form->isSubmitted() && $form->isValid()) {
 
             if ($form->get('save')->isClicked()){
@@ -161,7 +159,7 @@ class EventController extends AbstractController
 
         return $this->render('event/new.html.twig', [
             'form' => $form,
-            /*'locationsListJson' => json_encode($locationsList),*/
+
         ]);
     }
 

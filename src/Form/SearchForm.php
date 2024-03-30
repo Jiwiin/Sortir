@@ -29,7 +29,9 @@ class SearchForm extends AbstractType
                 'label' => 'Campus :',
                 'required' => false,
                 'class' => Campus::class,
+                'data' => $options['selectedCampus'],
                 'multiple' => false,
+                'placeholder' => false,
                 ])
             ->add('startDate', DateType::class, [
                 'label' => 'Entre',
@@ -67,7 +69,8 @@ class SearchForm extends AbstractType
         $resolver->setDefaults([
            'data_class' => SearchData::class,
            'method' => 'GET',
-           'csrf_protection' => false
+           'csrf_protection' => false,
+            'selectedCampus' => null,
         ]);
     }
 
