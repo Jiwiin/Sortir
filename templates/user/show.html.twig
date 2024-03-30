@@ -11,26 +11,26 @@
 
     <table class="table">
         <tbody>
-            <tr>
-                <th>Status</th>
-                <td>{{ user.campus.name }}</td>
-            </tr>
             {% if isOwnProfile %}
                 <tr>
-                    <th>Username</th>
+                    <th>Pseudo</th>
                     <td>{{ user.username }}</td>
                 </tr>
             {% endif %}
             <tr>
-                <th>Firstname</th>
+                <th>Prénom</th>
                 <td>{{ user.firstname }}</td>
             </tr>
             <tr>
-                <th>Lastname</th>
+                <th>Nom</th>
                 <td>{{ user.lastname }}</td>
             </tr>
             <tr>
-                <th>Phone</th>
+                <th>Campus</th>
+                <td>{{ user.campus.name }}</td>
+            </tr>
+            <tr>
+                <th>Téléphone</th>
                 <td>{{ user.phone }}</td>
             </tr>
             <tr>
@@ -40,14 +40,11 @@
         </tbody>
     </table>
     {% if isOwnProfile %}
-        {% if is_granted('ROLE_ADMIN') %}
-            <a href="{{ path('app_user_index') }}" class="btn btn-primary">User managing</a>
-        {% else %}
+
             <a href="{{ path('app_event_index') }}" class="btn btn-primary">back to list</a>
-        {% endif %}
+
             <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-primary">edit</a>
 
-        {{ include('user/_delete_form.html.twig') }}
 
     {% else %}
         {{ include('inc/_backBtn.html.twig') }}
