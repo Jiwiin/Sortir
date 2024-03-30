@@ -3,10 +3,38 @@
 {% block title %}Users{% endblock %}
 
 {% block body %}
-
-
-
-
+    <h1 class="text-center">Liste des utilisateurs</h1>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Pseudo</th>
+                <th>Nom</th>
+                <th>Prénom</th>
+                <th>Email</th>
+                <th>Campus</th>
+                <th>Etat</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for user in users %}
+            <tr>
+                <td><a href="{{ path('app_user_show', {'id': user.id}) }}" title="voir le profil de {{ user.username }}">{{ user.username }}</a></td>
+                <td>{{ user.lastname }}</td>
+                <td>{{ user.firstname }}</td>
+                <td>{{ user.email }}</td>
+                <td>{{ user.campus }}</td>
+                <td>
+                    <span class="badge rounded-pill {{ user.isStatus ? 'bg-success' : 'bg-danger' }}">{{ user.isStatus ? 'Actif' : 'Inactif' }}</span>
+                </td>
+                <td>
+                    <a href="{{ path('app_admin_edit', {'id': user.id}) }}"><img src="{{ asset('img/icon/construction.png')}}" width="25px" title="Modifier l'utilisateur"></a>
+                </td>
+            </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+    {{ include('inc/_backBtn.html.twig') }}
 
 
 {% endblock %}

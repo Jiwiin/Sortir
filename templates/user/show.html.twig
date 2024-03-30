@@ -4,7 +4,7 @@
 
 {% block body %}
     {% if isOwnProfile %}
-        <h1 class="text-center">My profile</h1>
+        <h1 class="text-center">Mon profil</h1>
     {% else %}
         <h1 class="text-center">{{ user.username }}</h1>
     {% endif %}
@@ -41,10 +41,9 @@
     </table>
     {% if isOwnProfile %}
 
-            <a href="{{ path('app_event_index') }}" class="btn btn-primary">back to list</a>
+            <a href="{{ path('app_event_index') }}" class="btn btn-primary">Retour</a>
 
-            <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-primary">edit</a>
-
+            <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-primary">Modifier</a>
 
     {% else %}
         {{ include('inc/_backBtn.html.twig') }}

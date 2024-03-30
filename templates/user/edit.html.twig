@@ -3,7 +3,7 @@
 {% block title %}Edit User{% endblock %}
 
 {% block body %}
-    <h1>Edit User</h1>
+    <h1>Mon profil</h1>
 <div class="modify_user">
     {{ form_errors(form) }}
 
@@ -55,8 +55,7 @@
     }) }}
 
     <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate')}}">
-    <button type="submit" class="btn btn-primary">Modifier</button>
     <a href="{{ path('app_user_show', {'id': user.id}) }}" class="btn btn-primary">Retour</a>
-
+    <button type="submit" class="btn btn-primary">Valider les modifications</button>
 </div>
 {% endblock %}
