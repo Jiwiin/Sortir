@@ -7,11 +7,7 @@
                     {{ form_label(form.campus) }}
                 </label>
                 <div class="col-md-9">
-                    <select id="campus" name="{{ field_name(form.campus) }}" class="form-control">
-                        {% for site in campus %}
-                            <option value="{{ site.id }}" {{ site.id == selectedCampus ? 'selected' : '' }}>{{ site.name }}</option>
-                        {% endfor %}
-                    </select>
+                    {{ form_widget(form.campus) }}
                 </div>
             </div>
             <div class="form-group row">
