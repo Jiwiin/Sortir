@@ -25,22 +25,48 @@ use function PHPUnit\Framework\throwException;
 #[Route('/event')]
 class EventController extends AbstractController
 {
-    #[Route('/subscribe/{id}', name: 'app_event_subscription', methods: ['GET','POST'])]
-    public function eventInscription(int $id, EventRepository $eventRepository, Request $request, EntityManagerInterface $entityManager): Response
+    #[Route('/unsubscribe/{id}', name: 'app_event_unsubscription', methods: ['GET','POST'])]
+    public function eventUnSubscribe(int $id, EventRepository $eventRepository, EntityManagerInterface $entityManager): Response
     {
-        // Récupérer l'ID
         /** @var User $user */
         $user = $this->getUser();
-        $currentDateTime = new \DateTime();
-
-        // Vérifier si l'événement est en etat "ouvert"
         $event = $eventRepository->find($id);
+
+        //Verif si l'event existe
         if (!$event)
         {
             throw $this->createNotFoundException('L\'utilisateur n\'existe pas');
         }
 
-        // Verifier si la date limite d'inscription ne soit pas dépassé
+        //Verif état ouvert et si date limite pas dépassé
+        if ($event->getState()== State::OUVERTE)
+        {
+            $event->removeParticipate($user);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_event_show', ['id'=>$id]);
+        }
+
+        return $this->redirectToRoute('app_event_show', ['id'=>$id]);
+    }
+
+
+    #[Route('/subscribe/{id}', name: 'app_event_subscription', methods: ['GET','POST'])]
+    public function eventSubscribe(int $id, EventRepository $eventRepository, EntityManagerInterface $entityManager): Response
+    {
+        // Récupérer l'ID
+        /** @var User $user */
+        $user = $this->getUser();
+        $currentDateTime = new \DateTime();
+        $event = $eventRepository->find($id);
+
+        //Verif si l'event existe
+        if (!$event)
+        {
+            throw $this->createNotFoundException('L\'utilisateur n\'existe pas');
+        }
+
+        // Verif si la date limite d'inscription n'est pas dépassé
         if ($event->getDateLimitRegistration() < $currentDateTime)
         {
             throw $this->createNotFoundException('La date limite d\'inscription est dépassée');
@@ -60,7 +86,6 @@ class EventController extends AbstractController
 
             return $this->redirectToRoute('app_event_show', ['id'=>$id]);
         }
-
 
    return $this->redirectToRoute('app_event_show', ['id'=>$id]);
 }
