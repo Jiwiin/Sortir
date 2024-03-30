@@ -31,6 +31,7 @@ class SearchForm extends AbstractType
                 'class' => Campus::class,
                 'data' => $options['selectedCampus'],
                 'multiple' => false,
+                'placeholder' => false,
                 ])
             ->add('startDate', DateType::class, [
                 'label' => 'Entre',
