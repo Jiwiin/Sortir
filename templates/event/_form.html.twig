@@ -108,6 +108,9 @@
         <div class="pt-3 d-flex align-items-center justify-content-center">
             <div class="mx-2">{{ form_widget(form.save) }}</div>
             <div class="mx-2">{{ form_widget(form.publish) }}</div>
+            {% if form.delete is defined and event.state.value == 'En création' %}
+                <div class="mx-2">{{ form_widget(form.delete) }}</div>
+            {% endif %}
             <div class="ms-2"><a href="{{ path('app_event_index') }}" class="btn btn-primary">Retour à la liste</a></div>
         </div>
     </div>

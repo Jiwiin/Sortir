@@ -70,7 +70,13 @@ class EventType extends AbstractType
             ])
             ->add('publish', SubmitType::class, [
                 'label'=> 'Publier',
-            ])
+            ]);
+            if ($options['displayDeleteButton']) {
+                $builder->add('delete', SubmitType::class, [
+                    'label' => 'Supprimer',
+                ]);
+            }
+
         ;
     }
 
@@ -78,6 +84,7 @@ class EventType extends AbstractType
     {
         $resolver->setDefaults([
             'data_class' => Event::class,
+            'displayDeleteButton' => false,
         ]);
     }
 }
