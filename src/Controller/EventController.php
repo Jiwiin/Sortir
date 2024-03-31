@@ -44,8 +44,12 @@ class EventController extends AbstractController
         {
             $event->removeParticipate($user);
             $entityManager->flush();
-
+            $this->addFlash('success', 'Vous n\'êtes plus inscrit à cet evenement.');
             return $this->redirectToRoute('app_event_show', ['id'=>$id]);
+        }
+        else
+        {
+            $this->addFlash('danger', 'Vous ne pouvez plus vous désincrire.');
         }
 
         return $this->redirectToRoute('app_event_show', ['id'=>$id]);
@@ -70,13 +74,15 @@ class EventController extends AbstractController
         // Verif si la date limite d'inscription n'est pas dépassé
         if ($event->getDateLimitRegistration() < $currentDateTime)
         {
-            throw $this->createNotFoundException('La date limite d\'inscription est dépassée');
+            $this->addFlash('danger', 'La date limite d\'inscription est dépassée.');
+            return $this->redirectToRoute('app_event_show', ['id'=>$id]);
         }
 
         // verifier si le nombre place maximum n'est pas atteint
         if ($event->getParticipate()->count() >= $event->getMaxRegistration())
         {
-            throw $this->createNotFoundException('Le nombre limite de participant est atteint');
+            $this->addFlash('danger', 'Le nombre limite de participants est atteint.');
+            return $this->redirectToRoute('app_event_show', ['id'=>$id]);
         }
 
         //Vérif si état "ouvert" et si organisateur
@@ -84,8 +90,12 @@ class EventController extends AbstractController
         {
             $event->addParticipate($user);
             $entityManager->flush();
-
+            $this->addFlash('success', 'Inscription réussie à l\'évènement.');
             return $this->redirectToRoute('app_event_show', ['id'=>$id]);
+        }
+        else
+        {
+            $this->addFlash('danger', 'L\'évènement n\'est plus disponible.');
         }
 
    return $this->redirectToRoute('app_event_show', ['id'=>$id]);
