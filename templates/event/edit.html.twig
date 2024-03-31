@@ -10,10 +10,3 @@
     {{ include('event/_delete_form.html.twig') }}
 {% endblock %}
 
-{% block javascripts %}
-    {{ parent() }}
-    <script>
-        let locationsData = {{ locationsData|raw }};
-    </script>
-    <script defer src="{{ asset('script/event-locations.js') }}"></script>
-{% endblock%}
