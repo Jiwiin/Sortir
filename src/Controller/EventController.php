@@ -27,7 +27,7 @@ use function PHPUnit\Framework\throwException;
 class EventController extends AbstractController
 {
     #[Route('/unsubscribe/{id}', name: 'app_event_unsubscription', methods: ['GET','POST'])]
-    public function eventUnSubscribe(int $id, EventRepository $eventRepository, EntityManagerInterface $entityManager): Response
+    public function eventUnSubscribe(int $id, Request $request, EventRepository $eventRepository, EntityManagerInterface $entityManager): Response
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -45,6 +45,13 @@ class EventController extends AbstractController
             $event->removeParticipate($user);
             $entityManager->flush();
 
+            //Refresh si clic depuis l'event list
+            $source = $request->query->get('source');
+            if ($source === 'eventIndex') {
+                $referer = $request->headers->get('referer');
+                return $this->redirect($referer ?: $this->generateUrl('app_event_show', ['id'=>$id]));
+            }
+
             return $this->redirectToRoute('app_event_show', ['id'=>$id]);
         }
 
@@ -53,7 +60,7 @@ class EventController extends AbstractController
 
 
     #[Route('/subscribe/{id}', name: 'app_event_subscription', methods: ['GET','POST'])]
-    public function eventSubscribe(int $id, EventRepository $eventRepository, EntityManagerInterface $entityManager): Response
+    public function eventSubscribe(int $id, Request $request,EventRepository $eventRepository, EntityManagerInterface $entityManager): Response
     {
         // Récupérer l'ID
         /** @var User $user */
@@ -84,6 +91,13 @@ class EventController extends AbstractController
         {
             $event->addParticipate($user);
             $entityManager->flush();
+
+            //Refresh si clic depuis l'event list
+            $source = $request->query->get('source');
+            if ($source === 'eventIndex') {
+                $referer = $request->headers->get('referer');
+                return $this->redirect($referer ?: $this->generateUrl('app_event_show', ['id'=>$id]));
+            }
 
             return $this->redirectToRoute('app_event_show', ['id'=>$id]);
         }
