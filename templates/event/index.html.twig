@@ -54,15 +54,18 @@
                 <td>
 
                     {% if app.user == event.eventOrganizer %}
-                        <a href="{{ path('app_event_edit', {'id': event.id}) }}"><img src="{{ asset('img/icon/construction.png')}}" width="25px" title="Modifier la sortie"></a>
-                        <a href="{{ path('app_event_edit', {'id': event.id}) }}"><img src="{{ asset('img/icon/send.png')}}" width="25px" title="Publier la sortie"></a>
+                        {% if event.state.value == 'En création' %}
+                            <a href="{{ path('app_event_edit', {'id': event.id}) }}"><img src="{{ asset('img/icon/send.png')}}" width="25px" title="Publier la sortie"></a>
+                        {% elseif event.state.value == 'En création' or event.state.value == 'Ouverte' or event.state.value == 'Clôturée' %}
+                            <a href="{{ path('app_event_edit', {'id': event.id}) }}"><img src="{{ asset('img/icon/construction.png')}}" width="25px" title="Modifier la sortie"></a>
+                        {% endif %}
                         <a href="{{ path('app_event_delete', {'id': event.id}) }}"><img src="{{ asset('img/icon/delete.png')}}" width="25px" title="Supprimer la sortie"></a>
                     {% else %}
                         <a href="{{ path('app_event_show', {'id': event.id}) }}"><img src="{{ asset('img/icon/view.png')}}" width="25px" title="Voir la sortie"></a>
-                            {% if app.user in event.participate %}
-                                <a href="{{ path('app_event_show', {'id': event.id}) }}"><img src="{{ asset('img/icon/signout.png')}}" width="25px" title="Se désinscrire de la sortie"></a>
-                            {% else %}
-                                <a href="{{ path('app_event_show', {'id': event.id}) }}"><img src="{{ asset('img/icon/register.png')}}" width="25px" title="S'inscrire à la sortie"></a>
+                            {% if app.user in event.participate and (event.state.value == 'Ouverte' or event.state.value == 'Clôturée' )%}
+                                <a href="{{ path('app_event_unsubscription', {'id': event.id}) }}"><img src="{{ asset('img/icon/signout.png')}}" width="25px" title="Se désinscrire de la sortie"></a>
+                            {% elseif event.state.value == 'Ouverte' %}
+                                <a href="{{ path('app_event_subscription', {'id': event.id}) }}"><img src="{{ asset('img/icon/register.png')}}" width="25px" title="S'inscrire à la sortie"></a>
                             {% endif %}
                     {% endif %}
                 </td>
