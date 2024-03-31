@@ -3,5 +3,58 @@
 {% block title %}User{% endblock %}
 
 {% block body %}
+    <h1>Modifier le profil de {{ user.username }}</h1>
+    <div class="modify_user">
+        {{ form_errors(form) }}
 
+        {{ form_start(form) }}
+        {{ form_row(form.username, {
+            label: 'Pseudo :',
+            attr: {'class': 'form-control',
+                'autocomplete' : 'username'
+            }
+        }) }}
+        {{ form_row(form.lastname, {
+            label: 'Nom :',
+            attr: {'class': 'form-control',
+                'autocomplete' : 'lastname'
+            }
+        }) }}
+        {{ form_row(form.firstname, {
+            label: 'Prénom :',
+            attr: {'class': 'form-control',
+                'autocomplete' : 'name'
+            }
+        }) }}
+        {{ form_row(form.email, {
+            label: 'Email :',
+            attr: {'class': 'form-control',
+                'autocomplete' : 'email'
+            }
+        }) }}
+        {{ form_row(form.phone, {
+            label: 'Téléphone :',
+            attr: {'class': 'form-control',
+                'autocomplete' : 'telephone'
+            }
+        }) }}
+        {{ form_row(form.campus, {
+            label: 'Campus :',
+            attr: {'class': 'form-control',
+                'autocomplete' : 'campus'}
+        }) }}
+        {{ form_row(form.status, {
+            label: 'Status :',
+            attr: {'class': 'form-control',
+                'autocomplete' : 'status'}
+        }) }}
+        {{ form_row(form.password, {
+            label: 'Mot de passe :',
+            attr: {'class': 'form-control',
+                'autocomplete' : 'current-password'}
+        }) }}
+        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate')}}">
+        <a href="{{ path('app_admin_show')}}" class="btn btn-primary">Retour</a>
+        <button type="submit" class="btn btn-primary">Valider les modifications</button>
+    </div>
 {% endblock %}

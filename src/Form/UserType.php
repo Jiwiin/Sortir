@@ -41,7 +41,11 @@ class UserType extends AbstractType
             ->add('firstname')
             ->add('lastname')
             ->add('phone')
-            ->add('status')
+            ->add('status', ChoiceType::class, [
+                'choices' => [
+                    'Actif' => true,
+                    'Inactif' => false,
+            ]])
             ->add('campus', EntityType::class, [
                 'class' => Campus::class,
                 'choice_label' => 'name',
