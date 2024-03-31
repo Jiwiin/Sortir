@@ -80,7 +80,7 @@ class EventController extends AbstractController
         }
 
         //Vérif si état "ouvert" et si organisateur
-        if ($event->getState()== State::OUVERTE && $event->getEventOrganizer() !== $user )
+        if ($event->getState()== State::OUVERTE)
         {
             $event->addParticipate($user);
             $entityManager->flush();
