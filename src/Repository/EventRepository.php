@@ -88,7 +88,7 @@ class EventRepository extends ServiceEntityRepository
                 ->andWhere('e.dateStart < :now')
                 ->setParameter('now', new \DateTime());
         }
-        //Ordre affichage
+        //Ordre affichage, n'affiche pas les sorties Historisée et Annulée depuis plus d'un mois
         $query
             ->addSelect("
         CASE
@@ -98,6 +98,12 @@ class EventRepository extends ServiceEntityRepository
         END AS HIDDEN priority
     ")
             ->setParameter('user', $search->user)
+            ->andWhere('
+        e.state NOT IN (:excludedStates) 
+        OR (e.state IN (:excludedStates) AND e.dateStart > :limitDate)
+    ')
+            ->setParameter('excludedStates', ['Historisée', 'Annulée'])
+            ->setParameter('limitDate', new \DateTime('-1 month'))
             ->orderBy('priority', 'ASC')
             ->addOrderBy('e.dateLimitRegistration', 'ASC');
 
