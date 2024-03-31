@@ -3,6 +3,12 @@
 {% block title %}Liste des sorties - {{ parent() }}{% endblock %}
 
 {% block body %}
+    <div class="container d-flex justify-content-end">
+        <div class="d-flex flex-column align-items-end">
+            <p>Date du jour : <strong>{{ "now"|format_datetime(pattern="d MMMM y", locale='fr') }}</strong></p>
+            <p>Participant : <strong>{{ app.user.username }}</strong></p>
+        </div>
+    </div>
     <div>
     <h2>Filtrer les sorties</h2>
                 {% include 'event/_filter.html.twig' with {form: form, selectedCampus: selectedCampus, campus: campus} only %}
