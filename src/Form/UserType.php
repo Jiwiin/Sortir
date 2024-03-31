@@ -27,7 +27,8 @@ class UserType extends AbstractType
             ])
             ->add('passwordConfirm', PasswordType::class, [
                 'label' => 'Confirmer le mot de passe',
-                'mapped' => false
+                'attr' => ['class' => 'form-control'],
+                'mapped'=>false,
             ])
             ->add('roles', ChoiceType::class, [
                 'choices' => [
@@ -45,7 +46,7 @@ class UserType extends AbstractType
                 'choices' => [
                     'Actif' => true,
                     'Inactif' => false,
-            ]])
+                ]])
             ->add('campus', EntityType::class, [
                 'class' => Campus::class,
                 'choice_label' => 'name',

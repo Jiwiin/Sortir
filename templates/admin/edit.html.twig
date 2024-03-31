@@ -48,11 +48,7 @@
             attr: {'class': 'form-control',
                 'autocomplete' : 'status'}
         }) }}
-        {{ form_row(form.password, {
-            label: 'Mot de passe :',
-            attr: {'class': 'form-control',
-                'autocomplete' : 'current-password'}
-        }) }}
+
         <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate')}}">
         <a href="{{ path('app_admin_show')}}" class="btn btn-primary">Retour</a>
         <button type="submit" class="btn btn-primary">Valider les modifications</button>
