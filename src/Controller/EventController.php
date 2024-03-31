@@ -208,14 +208,67 @@ class EventController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}', name: 'app_event_delete', methods: ['POST'])]
+    #[Route('/{id}/delete', name: 'app_event_delete', methods: ['GET'])]
     public function delete(Request $request, Event $event, EntityManagerInterface $entityManager): Response
     {
-        if ($this->isCsrfTokenValid('delete'.$event->getId(), $request->getPayload()->get('_token'))) {
-            $entityManager->remove($event);
-            $entityManager->flush();
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if($event->getEventOrganizer() != $user ) {
+            return $this->redirectToRoute('app_event_index');
         }
 
+        //Vérifie sur l'état est bien en création.
+        if ($event->getState() == State::EN_CREATION)
+        {
+            $entityManager->remove($event);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_event_index');
+        }
         return $this->redirectToRoute('app_event_index', [], Response::HTTP_SEE_OTHER);
     }
+
+    #[Route('/{id}/publish', name: 'app_event_publish', methods: ['GET'])]
+    public function publish(Event $event, EntityManagerInterface $entityManager): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if($event->getEventOrganizer() != $user ) {
+            return $this->redirectToRoute('app_event_index');
+        }
+
+        //Vérifie sur l'état est bien en création.
+        if ($event->getState() == State::EN_CREATION)
+        {
+            $event->setState(State::OUVERTE);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_event_index');
+        }
+        return $this->redirectToRoute('app_event_index');
+    }
+
+    #[Route('/{id}/cancel', name: 'app_event_cancel', methods: ['GET'])]
+    public function cancel(Request $request, Event $event, EntityManagerInterface $entityManager): Response
+    {
+        /** @var User $user */
+        $user = $this->getUser();
+
+        if($event->getEventOrganizer() != $user ) {
+            return $this->redirectToRoute('app_event_index');
+        }
+
+        //Vérifie sur l'état est bien ouverte.
+        if ($event->getState() == State::OUVERTE)
+        {
+            $event->setState(State::ANNULEE);
+            $entityManager->flush();
+
+            return $this->redirectToRoute('app_event_index');
+        }
+        return $this->redirectToRoute('app_event_index');
+    }
+
 }

@@ -68,13 +68,15 @@
                             <a href="{{ path('app_event_subscription', {'id': event.id}) }}"><img src="{{ asset('img/icon/register.png')}}" width="25px" title="S'inscrire à la sortie"></a>
                         {% endif %}
                         {% if event.state.value == 'En création' %}
-                            <a href="{{ path('app_event_edit', {'id': event.id}) }}"><img src="{{ asset('img/icon/send.png')}}" width="25px" title="Publier la sortie"></a>
+                            <a href="{{ path('app_event_publish', {'id': event.id}) }}" onclick="return confirmPublish();"><img src="{{ asset('img/icon/send.png')}}" width="25px" title="Publier la sortie"></a>
                         {% endif %}
                         {% if event.state.value == 'En création' or event.state.value == 'Ouverte' or event.state.value == 'Clôturée' %}
                             <a href="{{ path('app_event_edit', {'id': event.id}) }}"><img src="{{ asset('img/icon/construction.png')}}" width="25px" title="Modifier la sortie"></a>
                         {% endif %}
                         {% if event.state.value == 'En création' %}
-                            <a href="{{ path('app_event_delete', {'id': event.id}) }}"><img src="{{ asset('img/icon/delete.png')}}" width="25px" title="Supprimer la sortie"></a>
+                            <a href="{{ path('app_event_delete', {'id': event.id}) }}" onclick="return confirmDelete();">
+                                <img src="{{ asset('img/icon/delete.png') }}" width="25px" title="Supprimer la sortie">
+                            </a>
                         {% elseif event.state.value == 'Ouverte' %}
                             <a href="{{ path('app_event_delete', {'id': event.id}) }}"><img src="{{ asset('img/icon/cancel.png')}}" width="25px" title="Annuler la sortie"></a>
                         {% endif %}
@@ -99,4 +101,13 @@
     </div>
 
     <a href="{{ path('app_event_new') }}" class="btn btn-primary">Créer une sortie</a>
+
+    <script>
+        function confirmDelete() {
+            return confirm('Êtes-vous sûr de vouloir supprimer cette sortie ?');
+        }
+        function confirmPublish() {
+            return confirm('Êtes-vous sûr de vouloir publier cette sortie ?');
+        }
+    </script>
 {% endblock %}
