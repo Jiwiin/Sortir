@@ -3,6 +3,13 @@
 {% block title %}Modifier mon profil - {{ parent() }}{% endblock %}
 
 {% block body %}
+    {% for label, messages in app.flashes(['success', 'danger']) %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
     <h1>Modifier mon profil</h1>
 <div class="container">
     {{ form_errors(form) }}
@@ -48,6 +55,7 @@
 
     <a href="{{ path('app_user_show', {'id': user.id}) }}" class="btn btn-primary">Retour</a>
     <button type="submit" class="btn btn-primary">Valider les modifications</button>
+    <a href="{{ path('app_user_edit_password', {'id': user.id}) }}" class="btn btn-primary">Modifier mon mot de passe</a>
     {{ form_end(form) }}
 </div>
 {% endblock %}

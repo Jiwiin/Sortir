@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\UserPasswordType;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -56,7 +57,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/edit/{id}', name: 'app_user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher): Response
+    public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
         if (!$this->getUser())
         {
@@ -81,6 +82,38 @@ class UserController extends AbstractController
         return $this->render('user/edit.html.twig', [
             'user' => $user,
             'form' => $form,
+        ]);
+    }
+
+    #[Route('/edit/edit-password/{id}', name: 'app_user_edit_password', methods: ['GET', 'POST'])]
+    public function editPassword(Request $request, User $user, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher): Response
+    {
+        $form = $this->createForm(UserPasswordType::class);
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid())
+        {
+            if($userPasswordHasher->isPasswordValid($user, $form->getData()['plainPassword']))
+            {
+                $user->setPassword($userPasswordHasher->hashPassword($user, $form->getData()['newPassword']));
+
+                $this->addFlash('success', 'Le mot de passe à été modifié');
+                $entityManager->persist($user);
+                $entityManager->flush();
+
+                return $this->redirectToRoute('app_user_show', ['id' => $user->getId()]);
+            }
+            else
+            {
+                $this->addFlash('danger','Le mot de passe renseigné est incorrect');
+                return $this->redirectToRoute('app_user_edit_password', ['id' => $user->getId()]);
+            }
+
+        }
+
+        return $this->render('user/edit_password.html.twig', [
+            'form' => $form,
+            'user'=>$user
         ]);
     }
 
