@@ -12,15 +12,13 @@ use App\Form\EventType;
 use App\Form\SearchForm;
 use App\Repository\CampusRepository;
 use App\Repository\EventRepository;
-use App\Repository\LocationRepository;
 use App\Services\LocationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use function PHPUnit\Framework\throwException;
+
 
 
 #[Route('/event')]
@@ -124,6 +122,8 @@ class EventController extends AbstractController
         if(!$this->getUser()) {
             return $this->redirectToRoute('app_login');
         }
+
+        $eventRepository->updateEventState();
 
         /** @var User $user */
         //Vérifie si l'utilisateur connecté est une instance de User afin de récupérer son campus

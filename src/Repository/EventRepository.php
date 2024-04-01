@@ -7,7 +7,9 @@ use App\Entity\Event;
 use App\Entity\User;
 use App\Enum\State;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\Persistence\ManagerRegistry;
+use Symfony\Component\Console\Output\OutputInterface;
 
 /**
  * @extends ServiceEntityRepository<Event>
@@ -102,7 +104,7 @@ class EventRepository extends ServiceEntityRepository
         e.state NOT IN (:excludedStates) 
         OR (e.state IN (:excludedStates) AND e.dateStart > :limitDate)
     ')
-            ->setParameter('excludedStates', ['Historisée', 'Annulée'])
+            ->setParameter('excludedStates', ['Historisée', 'Annulée', 'Terminée'])
             ->setParameter('limitDate', new \DateTime('-1 month'))
             ->orderBy('priority', 'ASC')
             ->addOrderBy('e.dateLimitRegistration', 'ASC');
@@ -178,6 +180,46 @@ class EventRepository extends ServiceEntityRepository
             ->addOrderBy('e.dateLimitRegistration', 'ASC');
 
         return $query->getQuery()->getResult();
+    }
+
+    public function updateEventState()
+    {
+        //$eventRepository = $entityManager->getRepository(Event::class);
+        $entityManager = $this->getEntityManager();
+        $events = $this->findAll();
+
+        foreach ($events as $event) {
+            $now = new \DateTime();
+
+            // Transition de Ouverte En Clôturée
+            if ($event->getDateLimitRegistration() <= $now && in_array($event->getState(), [State::OUVERTE])) {
+                $event->setState(State::CLOTURE);
+            }
+
+            // Transition de Ouverte/Clôturée à En cours
+            if ($event->getDateStart() <= $now && in_array($event->getState(), [State::OUVERTE, State::CLOTURE])) {
+                $event->setState(State::EN_COURS);
+            }
+
+            // Clone le résultat de dateStart(), le modifie en ajoutant la durée de la sortie
+            $endDate = (clone $event->getDateStart())->modify('+' . $event->getDuration() . ' minutes');
+
+            // Transition de En cours à Terminée
+            if ($endDate <= $now && $event->getState() === State::EN_COURS) {
+                $event->setState(State::TERMINEE);
+            }
+
+            // Transition de Terminée à Historisée après 30 jours
+            $historicizationDate = (clone $endDate)->modify('+30 days');
+            if ($historicizationDate <= $now && $event->getState() === State::TERMINEE) {
+                $event->setState(State::HISTORISEE);
+            }
+
+            $entityManager->persist($event);
+        }
+
+        $entityManager->flush();
+
     }
 
 }
