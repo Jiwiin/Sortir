@@ -15,8 +15,8 @@ use Symfony\Component\Validator\Constraints as Assert;
 #[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_EMAIL', fields: ['email'])]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_USERNAME', fields: ['username'])]
-#[UniqueEntity(fields: ['email'], message: 'There is already an account with this email')]
-#[UniqueEntity(fields: ['username'], message: 'This username already exist')]
+#[UniqueEntity(fields: ['email'], message: 'Cet email existe deja pour un autre utilisateur.')]
+#[UniqueEntity(fields: ['username'], message: 'Ce pseudo éxiste déjà.')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -25,6 +25,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(length: 180, unique: true)]
+    #[Assert\NotBlank]
     private ?string $email = null;
 
     /**
@@ -39,16 +40,24 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column]
     private ?string $password = null;
 
-    #[ORM\Column(length: 50)]
+    #[ORM\Column(length: 50, unique: true)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min:2, max: 25, minMessage: 'Le pseudo doit avoir au moins 2 charactères', maxMessage:'Le pseudo ne peut pas dépasser 25 charactères')]
     private ?string $username = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min:2, max: 25, minMessage: 'Le prénom doit avoir au moins 2 charactères', maxMessage:'Le prénom ne peut pas dépasser 25 charactères')]
     private ?string $firstname = null;
 
     #[ORM\Column(length: 50)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min:2, max: 25, minMessage: 'Le nom doit avoir au moins 2 charactères', maxMessage:'Le nom ne peut pas dépasser 25 charactères')]
     private ?string $lastname = null;
 
     #[ORM\Column(length: 10)]
+    #[Assert\NotBlank]
+    #[Assert\Length(min:10, max: 10,minMessage: 'Veuillez rentrer un numéro valide', maxMessage:'Veuillez rentrer un numéro valide' )]
     private ?string $phone = null;
 
 
