@@ -34,7 +34,7 @@ class UserController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('', [], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('user/new.html.twig', [
@@ -55,27 +55,26 @@ class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
+    #[Route('/edit/{id}', name: 'app_user_edit', methods: ['GET', 'POST'])]
     public function edit(Request $request, User $user, EntityManagerInterface $entityManager, UserPasswordHasherInterface $userPasswordHasher): Response
     {
+        if (!$this->getUser())
+        {
+            return $this->redirectToRoute('app_login');
+        }
+        if($this->getUser() !== $user)
+        {
+            return $this->redirectToRoute('app_event_index');
+        }
 
         $form = $this->createForm(UserType::class, $user);
         $form->handleRequest($request);
 
-        if ($form->isSubmitted() && $form->isValid()) {
-            // Vérifier si un nouveau mot de passe a été soumis
-            $newPassword = $form->get('password')->getData();
-            if (empty($newPassword)) { //si le mdp est vide, il recupere le mdp de l'utilisateur en bdd
-                $currentPassword = $user->getPassword();
-                $user->setPassword($currentPassword);
-            } else {
-                // Sinon, hasher le nouveau mot de passe et mettre à jour
-                $hashedPassword = $userPasswordHasher->hashPassword($user, $newPassword);
-                $user->setPassword($hashedPassword);
-            }
+        if ($form->isSubmitted() && $form->isValid())
+        {
             $entityManager->flush();
 
-            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_user_show', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
         }
 
         return $this->render('user/edit.html.twig', [

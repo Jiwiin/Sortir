@@ -1,10 +1,10 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit User{% endblock %}
+{% block title %}Modifier mon profil - {{ parent() }}{% endblock %}
 
 {% block body %}
-    <h1>Mon profil</h1>
-<div class="modify_user">
+    <h1>Modifier mon profil</h1>
+<div class="container">
     {{ form_errors(form) }}
 
     {{ form_start(form) }}
@@ -38,11 +38,6 @@
             'autocomplete' : 'telephone'
         }
     }) }}
-    {{ form_row(form.password, {
-        label: 'Nouveau mot de passe :',
-        attr: {'class': 'form-control'
-        }
-    }) }}
 
     {{ form_row(form.campus, {
         label: 'Campus :',
@@ -50,8 +45,9 @@
             'autocomplete' : 'campus'}
     }) }}
 
-    <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate')}}">
+
     <a href="{{ path('app_user_show', {'id': user.id}) }}" class="btn btn-primary">Retour</a>
     <button type="submit" class="btn btn-primary">Valider les modifications</button>
+    {{ form_end(form) }}
 </div>
 {% endblock %}
