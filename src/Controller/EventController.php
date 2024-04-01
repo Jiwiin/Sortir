@@ -30,18 +30,30 @@ class EventController extends AbstractController
         /** @var User $user */
         $user = $this->getUser();
         $event = $eventRepository->find($id);
+        $currentDateTime = new \DateTime();
 
         //Verif si l'event existe
         if (!$event)
         {
             throw $this->createNotFoundException('L\'utilisateur n\'existe pas');
         }
+        if ($event->getDateLimitRegistration() < $currentDateTime)
+        {
+            $this->addFlash('danger', 'Vous ne pouvez plus vous désincrire car la date limite d\'insciption est dépassée.');
+            return $this->redirectToRoute('app_event_show', ['id'=>$id]);
+        }
 
-        //Verif état ouvert et si date limite pas dépassé
-        if ($event->getState()== State::OUVERTE)
+        //Verif état ouvert ou cloturée
+        if ($event->getState()== State::OUVERTE || $event->getState()== State::CLOTURE)
         {
             $event->removeParticipate($user);
             $entityManager->flush();
+            //Verif si le nombre de participant est inferieur au max
+            if ($event->getParticipate()->count() < $event->getMaxRegistration())
+            {
+                $event->setState(State::OUVERTE);
+                $entityManager->flush();
+            }
 
             //Refresh si clic depuis l'event list
             $source = $request->query->get('source');
@@ -96,6 +108,11 @@ class EventController extends AbstractController
         {
             $event->addParticipate($user);
             $entityManager->flush();
+            if ($event->getParticipate()->count() == $event->getMaxRegistration())
+            {
+                $event->setState(State::CLOTURE);
+                $entityManager->flush();
+            }
 
             //Refresh si clic depuis l'event list
             $source = $request->query->get('source');
