@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Form\AdminUserType;
 use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
@@ -33,14 +34,15 @@ class AdminController extends AbstractController
     #[Route('/users/{id}', name: 'app_admin_edit',  methods: ['GET','POST'])]
     public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
     {
-        $form = $this->createForm(UserType::class, $user);
+        $form = $this->createForm(AdminUserType::class, $user);
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
 
             $entityManager->flush();
+            $this->addFlash('success', 'Les modifications du profil ont été enregistrées.' );
 
-            return $this->redirectToRoute('app_admin_show',Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_admin_show');
         }
 
         return $this->render('admin/edit.html.twig', [

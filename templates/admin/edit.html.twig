@@ -1,10 +1,17 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}User{% endblock %}
+{% block title %}Modifier un utilisateur - {{ parent() }}{% endblock %}
 
 {% block body %}
+    {% for label, messages in app.flashes(['success', 'danger']) %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
     <h1>Modifier le profil de {{ user.username }}</h1>
-    <div class="modify_user">
+    <div class="container">
         {{ form_errors(form) }}
 
         {{ form_start(form) }}
@@ -48,9 +55,13 @@
             attr: {'class': 'form-control',
                 'autocomplete' : 'status'}
         }) }}
-
-        <input type="hidden" name="_csrf_token" value="{{ csrf_token('authenticate')}}">
+        {{ form_row(form.roles, {
+            label: 'Rôles :',
+            attr: {'class': 'form-control',
+                'autocomplete' : 'roles'}
+        }) }}
         <a href="{{ path('app_admin_show')}}" class="btn btn-primary">Retour</a>
         <button type="submit" class="btn btn-primary">Valider les modifications</button>
+        {{ form_end(form) }}
     </div>
 {% endblock %}

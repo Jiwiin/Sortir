@@ -1,8 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Users{% endblock %}
+{% block title %}Liste des utilsiateurs - {{ parent() }}{% endblock %}
 
 {% block body %}
+    {% for label, messages in app.flashes(['success', 'danger']) %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
     <h1 class="text-center">Liste des utilisateurs</h1>
     <table class="table">
         <thead>
@@ -19,7 +26,11 @@
         <tbody>
         {% for user in users %}
             <tr>
-                <td><a href="{{ path('app_user_show', {'id': user.id}) }}" title="voir le profil de {{ user.username }}">{{ user.username }}</a></td>
+                <td><a href="{{ path('app_user_show', {'id': user.id}) }}" title="voir le profil de {{ user.username }}">{{ user.username }}</a>
+                    {% if 'ROLE_ADMIN' in user.roles %}
+                        <span class="badge badge-success" style="background-color: blue">Admin</span>
+                    {% endif %}
+                </td>
                 <td>{{ user.lastname }}</td>
                 <td>{{ user.firstname }}</td>
                 <td>{{ user.email }}</td>

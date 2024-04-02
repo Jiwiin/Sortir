@@ -19,13 +19,12 @@ class AdminUserType extends AbstractType
             ->add('email')
             ->add('roles', ChoiceType::class, [
                 'choices' => [
-                    'User' => 'ROLE_USER',
-                    'Admin' => 'ROLE_ADMIN',
+                    'Utilisateur' => 'ROLE_USER',
+                    'Administrateur' => 'ROLE_ADMIN',
                 ],
-                'expanded' => false,
+                'expanded' => true,
                 'multiple' => true,
             ])
-            ->add('password')
             ->add('username')
             ->add('firstname')
             ->add('lastname')
@@ -38,11 +37,6 @@ class AdminUserType extends AbstractType
             ->add('campus', EntityType::class, [
                 'class' => Campus::class,
                 'choice_label' => 'name',
-            ])
-            ->add('participationEvents', EntityType::class, [
-                'class' => Event::class,
-                'choice_label' => 'id',
-                'multiple' => true,
             ])
         ;
     }
