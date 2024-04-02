@@ -10,82 +10,177 @@
             </div>
         {% endfor %}
     {% endfor %}
-    <h1>Sortie</h1>
+    <h1 class="text-center">Sortie {{ event.name }}</h1>
 
-    <table class="table">
-        <tbody>
-            <tr>
-                <th>Nom de la sortie</th>
-                <td>{{ event.name }}</td>
-            </tr>
-            <tr>
-                <th>Date et heure de la sortie</th>
-                <td>{{ event.dateStart ? event.dateStart|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Durée</th>
-                <td>{{ event.duration }} minutes</td>
-            </tr>
-            <tr>
-                <th>Date limite d'inscription</th>
-                <td>{{ event.dateLimitRegistration ? event.dateLimitRegistration|date('Y-m-d H:i:s') : '' }}</td>
-            </tr>
-            <tr>
-                <th>Nombre de places</th>
-                <td>{{ event.maxRegistration }}</td>
-            </tr>
-            <tr>
-                <th>Description et infos</th>
-                <td>{{ event.eventInfo }}</td>
-            </tr>
-            <tr>
-                <th>Campus</th>
-                <td>{{ event.eventOrganizer.campus.name }}</td>
-            </tr>
-            <tr>
-                <th>Lieu</th>
-                <td>{{ event.location.name }}</td>
-            </tr>
-            <tr>
-                <th>Rue</th>
-                <td>{{ event.location.street }}</td>
-            </tr>
-            <tr>
-                <th>Code postal</th>
-                <td>{{ event.location.city.zipcode }}</td>
-            </tr>
-            <tr>
-                <th>Latitude</th>
-                <td>{{ event.location.latitude }}</td>
-            </tr>
-            <tr>
-                <th>Latitude</th>
-                <td>{{ event.location.longitude }}</td>
-            </tr>
-        </tbody>
-    </table>
-    <br>
-    <h2>Participants</h2>
-    <table class="table">
-        <thead>
-        <tr>
-            <th>Pseudo</th>
-            <th>Nom des participants</th>
-        </tr>
-        </thead>
-        <tbody>
-        {% for participant in event.participate %}
-            <tr>
-                <td><a href="{{ path('app_user_show', {'id': participant.id}) }}">{{ participant.username }}</a></td>
-                <td>{{ participant.firstName }} {{ participant.lastName }}</td>
-            </tr>
-        {% endfor %}
-        </tbody>
-    </table>
+<div class="container mt-5">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="form-group row">
+                <p class="col-md-4">
+                    Nom de la sortie
+                </p>
+                <div class="col-md-8">
+                    <input type="text" readonly class="form-control" value="{{ event.name }}">
+                </div>
+            </div>
+            <div class="form-group row">
+                <p class="col-md-4">
+                    Date et heure de la sortie
+                </p>
+                <div class="col-md-8">
+                    <input type="text" readonly class="form-control" value="{{ event.dateStart|format_datetime(pattern="d MMMM y à HH:mm", locale='fr') }}">
+                </div>
+            </div>
+            <div class="form-group row">
+                <p class="col-md-4">
+                    Date limite d'inscription
+                </p>
+                <div class="col-md-8">
+                    <input type="text" readonly class="form-control" value="{{ event.dateLimitRegistration|format_datetime(pattern="d MMMM y à HH:mm", locale='fr') }}">
+                </div>
+            </div>
+            <div class="form-group row">
+                <p class="col-md-4">
+                    Nombre de places
+                </p>
+                <div class="col-md-2">
+                    <input type="text" readonly class="form-control" value=" {{ event.participate.count }}/{{ event.maxRegistration }}">
+                </div>
+            </div>
+            <div class="form-group row">
+                <p class="col-md-4">
+                    Durée (en minutes)
+                </p>
+                <div class="col-md-2">
+                    <input type="text" readonly class="form-control" value="{{ event.duration }} ">
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="row">
+                <div class="form-group row">
+                    <p class="col-md-4">
+                        Campus
+                    </p>
+                    <div class="col-md-8">
+                        <input type="text" readonly class="form-control" value="{{ event.eventOrganizer.campus.name }}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <p class="col-md-4">
+                        Ville
+                    </p>
+                    <div class="col-md-8">
+                        <input type="text" readonly class="form-control" value="{{ event.location.city.name }}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <p class="col-md-4">
+                        Rue
+                    </p>
+                    <div class="col-md-8">
+                        <input type="text" readonly class="form-control" value="{{ event.location.street }}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <p class="col-md-4">
+                        Code postal
+                    </p>
+                    <div class="col-md-8">
+                        <input type="text" readonly class="form-control" value="{{ event.location.city.zipcode }}">
+                    </div>
+                </div>
+                <div class="form-group row">
+                    <p class="col-md-4">
+                        Latitude / Longitude
+                    </p>
+                    <div class="col-md-8">
+                        <input type="text" readonly class="form-control" value="{{ event.location.latitude }} / {{ event.location.longitude }}">
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% if event.state.value == 'Annulée' %}
+            <strong class="text-center text-danger fs-1 mt-3">
+                Sortie Annulée
+            </strong>
+            <div class="col-md-12 mt-5">
+                <div class="form-group row">
+                    <p class="col-md-3 d-flex justify-content-end">
+                        Motif
+                    </p>
+                    <div class="col-md-6">
+                        <textarea readonly class="form-control" rows="3">{{ event.eventInfo|split('[CANCEL]')|first|trim }}</textarea>
+                    </div>
+                </div>
+            </div>
+        {% endif %}
+        <div class="col-md-12 mt-5">
+            <div class="form-group row">
+                <p class="col-md-5">
+                    Description et infos
+                </p>
+                <div class="col-md-12">
+                    <textarea readonly class="form-control" rows="3">{{ event.eventInfo|split('[CANCEL]')|last|trim }}</textarea>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="row mt-5">
+        <div class="col-md-4">
+            <h2>Participants</h2>
+            <div class="scrollable-table" style="max-height: 300px; overflow-y: auto;">
+                <table class="table table-hover">
+                    <thead>
+                    <tr>
+                        <th class="col-md-2">Pseudo</th>
+                        <th class="col-md-4">Nom des participants</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                        {% for participant in event.participate %}
+                            <tr>
+                                <td><a href="{{ path('app_user_show', {'id': participant.id}) }}">{{ participant.username }}</a></td>
+                                <td>{{ participant.firstName }} {{ participant.lastName }}</td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="col-md-8 mt-5">
+            <div class="mb-3">
+            <a href="{{ path('app_event_index') }}" class="btn btn-primary">Retour</a>
+            </div>
+            {% if event.state.value != 'Annulée' %}
+                {% if app.user == event.eventOrganizer %}
+                    {% if event.state.value == 'En création' %}
+                        <div class="mb-3"><a href="{{ path('app_event_edit', {'id': event.id}) }}" class="btn btn-primary">Modifier</a></div>
+                        <div class="mb-3"><a href="{{ path('app_event_publish', {'id': event.id}) }}" class="btn btn-success" onclick="return confirmPublish();">Publier</a></div>
+                        <div class="mb-3"><a href="{{ path('app_event_delete', {'id': event.id}) }}" class="btn btn-danger" onclick="return confirmDelete();">Supprimer</a></div>
+                    {% endif %}
+                    {% if event.state.value == 'Ouverte' %}
+                        <div class="mb-3"><a href="{{ path('app_event_cancel', {'id': event.id}) }}" class="btn btn-danger">Annuler</a></div>
+                    {% endif %}
+                {% endif %}
+                {% if app.user in event.participate and (event.state.value == 'Ouverte' or event.state.value == 'Clôturée' )%}
+                    <div class="mb-3"><a href="{{ path('app_event_unsubscription', {'id': event.id}) }}" class="btn btn-primary">Se désister</a></div>
+                {% elseif event.state.value == 'Ouverte' %}
+                    <div class="mb-3"> <a href="{{ path('app_event_subscription', {'id': event.id}) }}" class="btn btn-primary">S'inscrire à l'événement</a></div>
+                {% endif %}
+            {% endif %}
+        </div>
+    </div>
 
-    <a href="{{ path('app_event_index') }}" class="btn btn-primary">Retour</a>
-    <a href="{{ path('app_event_subscription', {'id': event.id}) }}" class="btn btn-primary">S'inscrire à l'événement</a>
-    <a href="{{ path('app_event_unsubscription', {'id': event.id}) }}" class="btn btn-primary">Se désister</a>
-    <a href="{{ path('app_event_edit', {'id': event.id}) }}" class="btn btn-primary">Modifier</a>
+
+    <script>
+        function confirmDelete() {
+            return confirm('Êtes-vous sûr de vouloir supprimer cette sortie ?');
+        }
+        function confirmPublish() {
+            return confirm('Êtes-vous sûr de vouloir publier cette sortie ?');
+        }
+    </script>
+
 
 {% endblock %}

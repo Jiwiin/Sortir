@@ -8,6 +8,7 @@ use App\Entity\Event;
 use App\Entity\Location;
 use App\Entity\User;
 use App\Enum\State;
+use App\Form\CancelEventType;
 use App\Form\EventType;
 use App\Form\SearchForm;
 use App\Repository\CampusRepository;
@@ -198,7 +199,7 @@ class EventController extends AbstractController
             $event->addParticipate($user);
             $entityManager->persist($event);
             $entityManager->flush();
-
+            $this->addFlash('success', 'L\'événement a été créé.');
             return $this->redirectToRoute('app_event_show', ['id' => $event->getId()], Response::HTTP_SEE_OTHER);
         }
 
@@ -277,6 +278,8 @@ class EventController extends AbstractController
             $entityManager->remove($event);
             $entityManager->flush();
 
+            $this->addFlash('danger', 'L\'événement a été supprimé.');
+
             //Refresh si clic depuis l'event list
             $source = $request->query->get('source');
             if ($source === 'eventIndex') {
@@ -290,7 +293,7 @@ class EventController extends AbstractController
     }
 
     #[Route('/{id}/publish', name: 'app_event_publish', methods: ['GET'])]
-    public function publish(Event $event, EntityManagerInterface $entityManager): Response
+    public function publish(Event $event, int $id, Request $request, EntityManagerInterface $entityManager): Response
     {
         /** @var User $user */
         $user = $this->getUser();
@@ -304,31 +307,53 @@ class EventController extends AbstractController
         {
             $event->setState(State::OUVERTE);
             $entityManager->flush();
-
-            return $this->redirectToRoute('app_event_index');
+            $this->addFlash('success', 'L\'événement a été publié, les utilisateurs peuvent maintenant s\'inscrire.');
+            //Refresh si clic depuis l'event list
+            $source = $request->query->get('source');
+            if ($source === 'eventIndex') {
+                $referer = $request->headers->get('referer');
+                return $this->redirect($referer ?: $this->generateUrl('app_event_show', ['id'=>$id]));
+            }
+            return $this->redirectToRoute('app_event_show', ['id' => $event->getId()], Response::HTTP_SEE_OTHER);
         }
         return $this->redirectToRoute('app_event_index');
     }
 
-    #[Route('/{id}/cancel', name: 'app_event_cancel', methods: ['GET'])]
-    public function cancel(Request $request, Event $event, EntityManagerInterface $entityManager): Response
+    #[Route('/{id}/cancel', name: 'app_event_cancel', methods: ['GET', 'POST'])]
+    public function cancel(Request $request, int $id, EventRepository $eventRepository, EntityManagerInterface $entityManager): Response
     {
         /** @var User $user */
         $user = $this->getUser();
+        $event = $eventRepository->find($id);
+        $eventInfo = $event->getEventInfo();
 
         if($event->getEventOrganizer() != $user ) {
             return $this->redirectToRoute('app_event_index');
         }
 
+        $form = $this->createForm(CancelEventType::class, $event);
+        $form->handleRequest($request);
+
         //Vérifie sur l'état est bien ouverte.
         if ($event->getState() == State::OUVERTE)
         {
-            $event->setState(State::ANNULEE);
-            $entityManager->flush();
 
-            return $this->redirectToRoute('app_event_index');
+            if($form->isSubmitted() && $form->isValid()) {
+
+                $info = $form->get('eventInfo')->getData();
+                $eventCancelInfo = $info . ' [CANCEL] ' . $eventInfo;
+                $event->setEventInfo($eventCancelInfo);
+                $event->setState(State::ANNULEE);
+                $entityManager->flush();
+                $this->addFlash('danger', 'L\'événement a été annulé.');
+                return $this->redirectToRoute('app_event_show', ['id' => $event->getId()], Response::HTTP_SEE_OTHER);
+            }
+
         }
-        return $this->redirectToRoute('app_event_index');
+        return $this->render('event/cancel.html.twig', [
+            'cancelEventForm'=> $form->createView(),
+            'event'=> $event
+        ]);
     }
 
 }

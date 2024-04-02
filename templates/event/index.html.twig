@@ -3,6 +3,13 @@
 {% block title %}Liste des sorties - {{ parent() }}{% endblock %}
 
 {% block body %}
+    {% for label, messages in app.flashes(['success', 'danger']) %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
     <div class="container d-flex justify-content-end">
         <div class="d-flex flex-column align-items-end">
             <p>Date du jour : <strong>{{ "now"|format_datetime(pattern="d MMMM y", locale='fr') }}</strong></p>

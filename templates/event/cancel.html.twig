@@ -1,0 +1,71 @@
+{% extends 'base.html.twig' %}
+
+{% block body %}
+<div class="container">
+    <h2 class="text-center">Annuler la sortie "{{ event.name }}"</h2>
+    {{ form_start(cancelEventForm) }}
+    <div class="row justify-content-center pt-5">
+        <div class="col-md-8">
+            <div class="form-group row">
+                <p class="col-md-4">
+                    Nom de la sortie
+                </p>
+                <div class="col-md-6">
+                    <input type="text" readonly class="form-control" value="{{ event.name }}">
+                </div>
+            </div>
+            <div class="form-group row">
+                <p class="col-md-4">
+                    Date et heure de la sortie
+                </p>
+                <div class="col-md-6">
+                    <input type="text" readonly class="form-control" value="{{ event.dateStart|format_datetime(pattern="d MMMM y à HH:mm", locale='fr') }}">
+                </div>
+            </div>
+            <div class="form-group row">
+                <p class="col-md-4">
+                    Campus
+                </p>
+                <div class="col-md-6">
+                    <input type="text" readonly class="form-control" value="{{ event.eventOrganizer.campus.name }}">
+                </div>
+            </div>
+            <div class="form-group row">
+                <p class="col-md-4">
+                    Lieu
+                </p>
+                <div class="col-md-6">
+                    <input type="text" readonly class="form-control" value="{{ event.location.name }}">
+                </div>
+            </div>
+            <div class="form-group row">
+                    <p class="col-md-4">
+                        Ville
+                    </p>
+                <div class="col-md-6">
+                    <input type="text" readonly class="form-control" value="{{ event.location.city.name }}">
+                </div>
+            </div>
+            <div class="form-group row mt-5">
+                <label class="col-md-4">
+                    {{ form_label(cancelEventForm.eventInfo) }}
+                </label>
+                <div class="col-md-6">
+                    {{ form_errors(cancelEventForm.eventInfo) }}
+                    {{ form_widget(cancelEventForm.eventInfo) }}
+                </div>
+            </div>
+            <div class="col-md-12 d-flex align-items-center justify-content-center pt-5">
+                <button type="submit" class="btn btn-danger" onclick="return confirm('Êtes-vous sûr de vouloir annuler la sortie {{ event.name }} ? Vous ne pourrez plus revenir en arrière.');">Confirmer l'annulation</button>
+            </div>
+            {{ form_end(cancelEventForm) }}
+        </div>
+    </div>
+</div>
+
+{% endblock %}
+
+{% block title %}
+    Annuler la sortie {{ event.name }} - {{ parent() }}
+{% endblock %}
+
