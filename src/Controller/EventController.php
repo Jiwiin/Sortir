@@ -168,7 +168,7 @@ class EventController extends AbstractController
 
         return $this->render('event/index.html.twig', [
             'events' => $events,
-            'campus' => $campusRepository->findAll(),
+            /*'campus' => $campusRepository->findAll(),*/
             'selectedCampus' => $campusId,
             'form' => $form->createView(),
         ]);

@@ -40,7 +40,9 @@ class EventRepository extends ServiceEntityRepository
     {
         $query = $this
             ->createQueryBuilder('e')
+            ->addSelect('o', 'c', 'p')
             ->join('e.eventOrganizer', 'o')
+            ->join( 'e.participate', 'p')
             ->join('o.campus', 'c');
 
         if(!empty($search->q)) {
