@@ -27,6 +27,7 @@
         </thead>
         <tbody class="text-center">
         {% for event in events %}
+
             <tr>
                 <td><a href="{{ path('app_event_show', {'id': event.id}) }}">{{ event.name }}</a></td>
                 <td>{{ event.dateStart ? event.dateStart|format_datetime(pattern="d MMMM y à HH:mm", locale='fr'): '' }}</td>
@@ -78,7 +79,7 @@
                                 <img src="{{ asset('img/icon/delete.png') }}" width="25px" title="Supprimer la sortie">
                             </a>
                         {% elseif event.state.value == 'Ouverte' %}
-                            <a href="{{ path('app_event_delete', {'id': event.id, 'source':'eventIndex'}) }}"><img src="{{ asset('img/icon/cancel.png')}}" width="25px" title="Annuler la sortie"></a>
+                            <a href="{{ path('app_event_cancel', {'id': event.id, 'source':'eventIndex'}) }}"><img src="{{ asset('img/icon/cancel.png')}}" width="25px" title="Annuler la sortie"></a>
                         {% endif %}
 
                     {% else %}
@@ -91,6 +92,7 @@
                     {% endif %}
                 </td>
             </tr>
+
         {% else %}
             <tr>
                 <td colspan="8">Aucune sortie trouvée</td>
