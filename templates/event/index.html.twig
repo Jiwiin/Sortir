@@ -27,7 +27,7 @@
         </thead>
         <tbody class="text-center">
         {% for event in events %}
-
+            {% if event.state.value != 'En création' or (event.state.value == 'En création' and event.eventOrganizer == app.user) %}
             <tr>
                 <td><a href="{{ path('app_event_show', {'id': event.id}) }}">{{ event.name }}</a></td>
                 <td>{{ event.dateStart ? event.dateStart|format_datetime(pattern="d MMMM y à HH:mm", locale='fr'): '' }}</td>
@@ -92,7 +92,7 @@
                     {% endif %}
                 </td>
             </tr>
-
+            {% endif %}
         {% else %}
             <tr>
                 <td colspan="8">Aucune sortie trouvée</td>

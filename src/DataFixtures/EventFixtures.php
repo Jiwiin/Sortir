@@ -7,6 +7,7 @@ use App\Entity\Event;
 use App\Entity\Location;
 use App\Entity\User;
 use App\Enum\State;
+use DateInterval;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Common\DataFixtures\DependentFixtureInterface;
 use Doctrine\Persistence\ObjectManager;
@@ -20,6 +21,65 @@ class EventFixtures extends Fixture implements DependentFixtureInterface
         $durations = [60, 90, 120, 150, 180, 210];
         $locationList = $manager->getRepository(Location::class)->findAll();
         $userList = $manager->getRepository(User::class)->findAll();
+
+        for ($i = 0; $i < 15; $i++) {
+            $event = new Event();
+            $event->setName(
+                $faker->randomElement(['Avec la promo', 'Tous ensemble', 'Pour le plaisir', 'Se détendre : ', 'S\'amuser']) . " " .
+                $faker->randomElement(['Cinéma', 'Parc', 'Musée', 'Galerie', 'Restaurant', 'Théâtre', 'Stade', 'Centre commercial']) . " " .
+                $faker->lastName
+            )
+                ->setDateStart($faker->dateTimeBetween('+5 days', '+30 days'))
+                ->setDuration($durations[array_rand($durations)]);
+            $dateLimit = (clone $event->getDateStart())->modify('-1 day');
+            $event->setDateLimitRegistration($dateLimit)
+                ->setMaxRegistration(rand(2, 30))
+                ->setEventInfo($faker->realText)
+                ->setState(State::OUVERTE)
+                ->setLocation($locationList[array_rand($locationList)]);
+            for($i = 1; $i <= rand(2,30); $i++){
+                $event->addParticipate($userList[array_rand($userList)]);
+            }
+            $event->setEventOrganizer($userList[array_rand($userList)]);
+            $manager->persist($event);
+        }
+
+        for ($i = 0; $i < 3; $i++) {
+            $event = new Event();
+            $event->setName($faker->randomElement(['Cinéma', 'Parc', 'Musée', 'Galerie', 'Restaurant', 'Théatre', 'Stade', 'Centre commercial']) . " " .$faker->lastName)
+                ->setDateStart($faker->dateTimeBetween('-45 days', '-35 days'))
+                ->setDuration($durations[array_rand($durations)]);
+            $dateLimit = (clone $event->getDateStart())->modify('-1 day');
+            $event->setDateLimitRegistration($dateLimit)
+                ->setMaxRegistration(rand(2, 30))
+                ->setEventInfo($faker->realText)
+                ->setState(State::OUVERTE)
+                ->setLocation($locationList[array_rand($locationList)]);
+            for($i = 1; $i <= rand(2,30); $i++){
+                $event->addParticipate($userList[array_rand($userList)]);
+            }
+            $event->setEventOrganizer($userList[array_rand($userList)]);
+            $manager->persist($event);
+        }
+
+        for ($i = 0; $i < 3; $i++) {
+            $event = new Event();
+            $event->setName($faker->randomElement(['Cinéma', 'Parc', 'Musée', 'Galerie', 'Restaurant', 'Théatre', 'Stade', 'Centre commercial']) . " " .$faker->lastName)
+                ->setDateStart($faker->dateTimeBetween('-15 days', '-10 days'))
+                ->setDuration($durations[array_rand($durations)]);
+            $dateLimit = (clone $event->getDateStart())->modify('-1 day');
+            $event->setDateLimitRegistration($dateLimit)
+                ->setMaxRegistration(rand(2, 30))
+                ->setEventInfo($faker->realText)
+                ->setState(State::OUVERTE)
+                ->setLocation($locationList[array_rand($locationList)]);
+            for($i = 1; $i <= rand(2,30); $i++){
+                $event->addParticipate($userList[array_rand($userList)]);
+            }
+            $event->setEventOrganizer($userList[array_rand($userList)]);
+            $manager->persist($event);
+        }
+
         $event = new Event();
         $dateStart = new \DateTime('2024-01-02 14:00:00');
         $event->setName('Paintball')
