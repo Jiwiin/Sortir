@@ -13,7 +13,7 @@ class CSVUploadFormType extends AbstractType
     {
         $builder
             ->add('csvFile', FileType::class, [
-                'label' => 'Fichier CSV (CSV file)',
+                'label' => false,
                 'mapped' => false,
                 'constraints' => [
                     new File([

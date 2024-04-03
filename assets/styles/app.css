@@ -26,6 +26,11 @@ body {
     text-shadow: 1px 1px 1px #F5F5F5;
 }
 
+.form-style-white {
+    text-shadow: 1px 1px 1px #000000;
+    color: #F5F5F5;
+}
+
 /* Navbar */
 .nav-link {
     color: #6283DF;

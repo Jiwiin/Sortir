@@ -49,5 +49,18 @@
 
         {{ form_end(form) }}
     </div>
+    <div class="container form-style-white col-6">
+        <span>Upload de fichier CSV pour insérer des utilisateurs</span>
+        {{ form_start(formCSV) }}
+        <div class="row">
+            <div class="col">
+                {{ form_widget(formCSV) }}
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">Enregistrer</button>
+            </div>
+        </div>
+        {{ form_end(formCSV) }}
+    </div>
 
 {% endblock %}
