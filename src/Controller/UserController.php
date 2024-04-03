@@ -91,9 +91,11 @@ class UserController extends AbstractController
                             $this->getParameter('uploads_directory'),
                             $newFilename
                         );
-                    } catch (FileException $e) {
-                        $user->setProfilePicture($newFilename);
+                    } catch (FileException $e)
+                    {
+
                     }
+                    $user->setProfilePicture($newFilename);
                 }
             }
             $entityManager->flush();
