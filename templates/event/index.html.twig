@@ -11,7 +11,7 @@
         {% endfor %}
     {% endfor %}
     <div class="container d-flex justify-content-end">
-        <div class="d-flex flex-column align-items-end">
+        <div class="d-flex flex-column align-items-end form-style">
             <p>Date du jour : <strong>{{ "now"|format_datetime(pattern="d MMMM y", locale='fr') }}</strong></p>
             <p>Participant : <strong>{{ app.user.username }}</strong></p>
         </div>

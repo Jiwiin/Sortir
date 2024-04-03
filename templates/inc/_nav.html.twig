@@ -1,16 +1,28 @@
-<ul class="nav justify-content-end fixed-top" >
-    {% if is_granted('ROLE_ADMIN') %}
-    <li class="nav-item">
-        <a class="nav-link" href="{{ path('app_admin_index') }}" title="Administration">Administration</a>
-    </li>
-    {% endif %}
-    <li class="nav-item">
-        <a class="nav-link active" href="{{ path('app_event_index') }}" title="Accueil">Accueil</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="{{ path('app_user_show', {'id': app.user.id}) }}" title="Profil">Mon profil</a>
-    </li>
-    <li class="nav-item">
-        <a class="nav-link" href="{{ path('app_logout') }}" title="">Se déconnecter ({{ app.user.username }})</a>
-    </li>
-</ul>
+<nav class="navbar navbar-expand-lg">
+    <div class="container-fluid">
+    <a class="navbar-brand mx-auto ms-0 ms-lg-5" href="/">
+        <img src="{{ asset('img/logo.png') }}" width="150" height="150" class="d-inline-block align-top effect-big" alt="">
+        <span>Sortir.com</span>
+    </a>
+    <div>
+        {% if app.request.attributes.get('_route') != 'app_login' %}
+        <ul class="navbar-nav ml-auto justify-content-end">
+            {% if is_granted('ROLE_ADMIN') %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{{ path('app_admin_index') }}" title="Administration">Administration</a>
+                </li>
+            {% endif %}
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('app_event_index') }}" title="Accueil">Accueil</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('app_user_show', {'id': app.user.id}) }}" title="Profil">Mon profil</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="{{ path('app_logout') }}" title="">Se déconnecter ({{ app.user.username }})</a>
+            </li>
+        </ul>
+        {% endif %}
+    </div>
+    </div>
+</nav>

@@ -16,12 +16,7 @@
     <body>
         <header>
            {% block header %}
-               {% include("inc/_logo.html.twig") %}
-
-               {# Condition d'affichage de la navbar #}
-               {% if app.request.attributes.get('_route') != 'app_login' %}
                    {% include('inc/_nav.html.twig') %}
-               {% endif %}
            {% endblock %}
         </header>
 
@@ -29,8 +24,8 @@
             {% block body %}{% endblock %}
         </main>
 
-        <footer>
-            <div>&copy; {{ "now" | date("Y") }} - Sortir.com</div>
+        <footer class="footer">
+            <div>&copy; {{ "now" |date("Y") }} - Sortir.com</div>
         </footer>
     </body>
 </html>
