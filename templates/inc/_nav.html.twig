@@ -5,7 +5,7 @@
         <span>Sortir.com</span>
     </a>
     <div>
-        {% if app.request.attributes.get('_route') != 'app_login' %}
+        {% if app.user %}
         <ul class="navbar-nav ml-auto justify-content-end">
             {% if is_granted('ROLE_ADMIN') %}
                 <li class="nav-item">

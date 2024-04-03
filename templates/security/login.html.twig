@@ -20,7 +20,7 @@
     <h1 class="h3 mb-3 font-weight-normal text-center main-style">Veuillez vous identifier</h1>
     <label for="inputEmail" class="main-style">Email</label>
     <input type="email" value="{{ last_username }}" name="email" id="inputEmail" class="form-control" autocomplete="email" required autofocus>
-    <label for="inputPassword" class="main-style">Password</label>
+    <label for="inputPassword" class="main-style">Mot de passe</label>
     <input type="password" name="password" id="inputPassword" class="form-control" autocomplete="current-password" required>
 
     <input type="hidden" name="_csrf_token"
@@ -33,9 +33,12 @@
         </label>
     </div>
 
+
     <button class="btn btn-primary" type="submit">
         Se connecter
     </button>
+    <a href="{{ path('app_forgot_password_request') }}" class="form-style">Mot de passe oublié ?</a>
+
 </form>
     </div>
 {% endblock %}

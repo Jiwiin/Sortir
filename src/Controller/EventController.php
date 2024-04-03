@@ -25,6 +25,46 @@ use Symfony\Component\Routing\Attribute\Route;
 #[Route('/event')]
 class EventController extends AbstractController
 {
+    #[Route('/', name: 'app_event_index', methods: ['GET'])]
+    public function index(EventRepository $eventRepository, EntityManagerInterface $entityManager,  CampusRepository $campusRepository, Request $request): Response
+    {
+        if(!$this->getUser()) {
+            return $this->redirectToRoute('app_login');
+        }
+
+        $eventRepository->updateEventState();
+
+        /** @var User $user */
+        //Vérifie si l'utilisateur connecté est une instance de User afin de récupérer son campus
+        $user = $this->getUser();
+
+        // filtre form
+        $data = new SearchData();
+        $form = $this->createForm(SearchForm::class, $data, [ 'selectedCampus' => $user->getCampus()]);
+        $form->handleRequest($request);
+
+        //Récupère l'id du campus envoyé dans l'url
+        $campusId = $request->query->get('campus');
+        if(!empty($campusId)) {
+            $campus = $entityManager->getRepository(Campus::class)->find($campusId);
+            if($campus !== null) {
+                $data->campus = $campus;
+            }
+        } else {
+            $data->campus = $user->getCampus();
+        }
+
+        //Ajout de l'utilisateur connecté dans le SearchData
+        $data->user = $user;
+        $events = $eventRepository->findSearch($data);
+
+        return $this->render('event/index.html.twig', [
+            'events' => $events,
+            /*'campus' => $campusRepository->findAll(),*/
+            'selectedCampus' => $campusId,
+            'form' => $form->createView(),
+        ]);
+    }
     #[Route('/unsubscribe/{id}', name: 'app_event_unsubscription', methods: ['GET','POST'])]
     public function eventUnSubscribe(int $id, Request $request, EventRepository $eventRepository, EntityManagerInterface $entityManager): Response
     {
@@ -134,48 +174,6 @@ class EventController extends AbstractController
         }
 
         return $this->redirectToRoute('app_event_show', ['id'=>$id]);
-    }
-
-
-    #[Route('/', name: 'app_event_index', methods: ['GET'])]
-    public function index(EventRepository $eventRepository, EntityManagerInterface $entityManager,  CampusRepository $campusRepository, Request $request): Response
-    {
-        if(!$this->getUser()) {
-            return $this->redirectToRoute('app_login');
-        }
-
-        $eventRepository->updateEventState();
-
-        /** @var User $user */
-        //Vérifie si l'utilisateur connecté est une instance de User afin de récupérer son campus
-        $user = $this->getUser();
-
-        // filtre form
-        $data = new SearchData();
-        $form = $this->createForm(SearchForm::class, $data, [ 'selectedCampus' => $user->getCampus()]);
-        $form->handleRequest($request);
-
-        //Récupère l'id du campus envoyé dans l'url
-        $campusId = $request->query->get('campus');
-        if(!empty($campusId)) {
-            $campus = $entityManager->getRepository(Campus::class)->find($campusId);
-            if($campus !== null) {
-                $data->campus = $campus;
-            }
-        } else {
-            $data->campus = $user->getCampus();
-        }
-
-        //Ajout de l'utilisateur connecté dans le SearchData
-        $data->user = $user;
-        $events = $eventRepository->findSearch($data);
-
-        return $this->render('event/index.html.twig', [
-            'events' => $events,
-            /*'campus' => $campusRepository->findAll(),*/
-            'selectedCampus' => $campusId,
-            'form' => $form->createView(),
-        ]);
     }
 
     #[Route('/new', name: 'app_event_new', methods: ['GET', 'POST'])]
