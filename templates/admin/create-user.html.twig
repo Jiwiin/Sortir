@@ -30,7 +30,9 @@
 
         {{ form_row(form.email, {
             label: 'Email :',
-            attr: {'class': 'form-control'}}) }}
+            attr: {'class': 'form-control'},
+            'type': 'email'
+        }) }}
 
         {{ form_row(form.phone, {
             label: 'Téléphone :',

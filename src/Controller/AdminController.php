@@ -65,7 +65,6 @@ class AdminController extends AbstractController
             $user->setPassword($userPasswordHasher->hashPassword($user, 'azerty'));
             $user->setRoles(['ROLE_USER']);
             $user->setStatus(true);
-            $user->setProfilePicture('sortir.png');
             $entityManager->persist($user);
             $entityManager->flush();
 
