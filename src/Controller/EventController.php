@@ -52,7 +52,10 @@ class EventController extends AbstractController
             //Verif si le nombre de participant est inferieur au max
             if ($event->getParticipate()->count() < $event->getMaxRegistration())
             {
-                $event->setState(State::OUVERTE);
+                if($event->getState()== State::CLOTURE)
+                {
+                    $event->setState(State::OUVERTE);
+                }
                 $entityManager->flush();
             }
 
