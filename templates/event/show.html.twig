@@ -159,15 +159,15 @@
                         <div class="mb-3"><a href="{{ path('app_event_publish', {'id': event.id}) }}" class="btn btn-success" onclick="return confirmPublish();">Publier</a></div>
                         <div class="mb-3"><a href="{{ path('app_event_delete', {'id': event.id}) }}" class="btn btn-danger" onclick="return confirmDelete();">Supprimer</a></div>
                     {% endif %}
-                    {% if event.state.value == 'Ouverte' %}
-                        <div class="mb-3"><a href="{{ path('app_event_cancel', {'id': event.id}) }}" class="btn btn-danger">Annuler</a></div>
-                    {% endif %}
                 {% endif %}
                 {% if app.user in event.participate and (event.state.value == 'Ouverte' or event.state.value == 'Clôturée' )%}
                     <div class="mb-3"><a href="{{ path('app_event_unsubscription', {'id': event.id}) }}" class="btn btn-primary">Se désister</a></div>
                 {% elseif event.state.value == 'Ouverte' %}
                     <div class="mb-3"> <a href="{{ path('app_event_subscription', {'id': event.id}) }}" class="btn btn-primary">S'inscrire à l'événement</a></div>
                 {% endif %}
+            {% endif %}
+            {% if (app.user == event.eventOrganizer or is_granted('ROLE_ADMIN')) and (event.state.value == 'Ouverte' or event.state.value == 'Clôturée') %}
+                <div class="mb-3"><a href="{{ path('app_event_cancel', {'id': event.id}) }}" class="btn btn-danger">Annuler</a></div>
             {% endif %}
         </div>
     </div>

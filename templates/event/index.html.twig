@@ -85,8 +85,6 @@
                             <a href="{{ path('app_event_delete', {'id': event.id}) }}" onclick="return confirmDelete();">
                                 <img src="{{ asset('img/icon/delete.png') }}" width="25px" title="Supprimer la sortie">
                             </a>
-                        {% elseif event.state.value == 'Ouverte' %}
-                            <a href="{{ path('app_event_cancel', {'id': event.id, 'source':'eventIndex'}) }}"><img src="{{ asset('img/icon/cancel.png')}}" width="25px" title="Annuler la sortie"></a>
                         {% endif %}
 
                     {% else %}
@@ -96,6 +94,9 @@
                             {% elseif event.state.value == 'Ouverte' %}
                                 <a href="{{ path('app_event_subscription', {'id': event.id, 'source':'eventIndex'}) }}"><img src="{{ asset('img/icon/register.png')}}" width="25px" title="S'inscrire à la sortie"></a>
                             {% endif %}
+                    {% endif %}
+                    {% if (app.user == event.eventOrganizer or is_granted('ROLE_ADMIN')) and (event.state.value == 'Ouverte' or event.state.value == 'Clôturée') %}
+                        <a href="{{ path('app_event_cancel', {'id': event.id}) }}"><img src="{{ asset('img/icon/cancel.png')}}" width="25px" title="Annuler la sortie"></a>
                     {% endif %}
                 </td>
             </tr>

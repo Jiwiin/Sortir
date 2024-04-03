@@ -328,29 +328,24 @@ class EventController extends AbstractController
         $event = $eventRepository->find($id);
         $eventInfo = $event->getEventInfo();
 
-        if($event->getEventOrganizer() != $user ) {
+        if($event->getEventOrganizer() != $user && !in_array('ROLE_ADMIN', $user->getRoles())) {
             return $this->redirectToRoute('app_event_index');
         }
 
         $form = $this->createForm(CancelEventType::class, $event);
         $form->handleRequest($request);
 
-        //Vérifie sur l'état est bien ouverte.
-        if ($event->getState() == State::OUVERTE)
-        {
+        if($form->isSubmitted()) {
 
-            if($form->isSubmitted() && $form->isValid()) {
-
-                $info = $form->get('eventInfo')->getData();
-                $eventCancelInfo = $info . ' [CANCEL] ' . $eventInfo;
-                $event->setEventInfo($eventCancelInfo);
-                $event->setState(State::ANNULEE);
-                $entityManager->flush();
-                $this->addFlash('danger', 'L\'événement a été annulé.');
-                return $this->redirectToRoute('app_event_show', ['id' => $event->getId()], Response::HTTP_SEE_OTHER);
-            }
-
+            $info = $form->get('eventInfo')->getData();
+            $eventCancelInfo = $info . ' [CANCEL] ' . $eventInfo;
+            $event->setEventInfo($eventCancelInfo);
+            $event->setState(State::ANNULEE);
+            $entityManager->flush();
+            $this->addFlash('danger', 'L\'événement a été annulé.');
+            return $this->redirectToRoute('app_event_show', ['id' => $event->getId()], Response::HTTP_SEE_OTHER);
         }
+
         return $this->render('event/cancel.html.twig', [
             'cancelEventForm'=> $form->createView(),
             'event'=> $event
