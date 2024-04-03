@@ -73,6 +73,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\ManyToMany(targetEntity: Event::class, mappedBy: 'participate')]
     private Collection $participationEvents;
+    private string $profilePictureFilename;
 
     public function __construct()
     {
@@ -288,11 +289,23 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    /**
+     * @return string
+     */
+    public function getProfilePicture(): string
+    {
+        return $this ->profilePictureFilename;
+    }
+    public function setProfilePictureFilename(string $pictureFilename): self
+    {
+        $this->profilePictureFilename = $pictureFilename;
+        return $this;
+    }
 
-
-
-
-
-
+    public function setProfilePicture(string $newFilename): static
+    {
+        $this->setProfilePictureFilename($newFilename);
+        return $this;
+    }
 
 }

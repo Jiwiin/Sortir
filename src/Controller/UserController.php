@@ -8,10 +8,14 @@ use App\Form\UserType;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\File\Exception\FileException;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\String\Slugger\SluggerInterface;
+
 
 #[Route('/user')]
 class UserController extends AbstractController
@@ -57,7 +61,7 @@ class UserController extends AbstractController
     }
 
     #[Route('/edit/{id}', name: 'app_user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
+    public function edit(Request $request, User $user, EntityManagerInterface $entityManager,SluggerInterface $slugger): Response
     {
         if (!$this->getUser())
         {
@@ -73,6 +77,25 @@ class UserController extends AbstractController
 
         if ($form->isSubmitted() && $form->isValid())
         {
+
+            if($form->isSubmitted() && $form->isValid()){
+                $profilePictureFile = $form->get('profilePicture')->getData();
+
+                if ($profilePictureFile){
+                    $originalFilename = pathinfo($profilePictureFile->getClientOriginalName(), PATHINFO_FILENAME);
+                    $safeFilename = $slugger->slug($originalFilename);
+                    $newFilename = $safeFilename.'-'.uniqid('', true).'.'.$profilePictureFile->guessExtension();
+
+                    try {
+                        $profilePictureFile->move(
+                            $this->getParameter('uploads_directory'),
+                            $newFilename
+                        );
+                    } catch (FileException $e) {
+                        $user->setProfilePicture($newFilename);
+                    }
+                }
+            }
             $entityManager->flush();
 
             $this->addFlash('success', 'Les informations de votre profil ont bien été modifiées.');
@@ -83,6 +106,7 @@ class UserController extends AbstractController
             'user' => $user,
             'form' => $form,
         ]);
+
     }
 
     #[Route('/edit/edit-password/{id}', name: 'app_user_edit_password', methods: ['GET', 'POST'])]
