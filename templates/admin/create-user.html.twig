@@ -1,0 +1,51 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Creer un nouvel utilisateur - {{ parent() }}{% endblock %}
+
+{% block body %}
+    {% for label, messages in app.flashes(['success', 'danger']) %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+    <h1>Creer un nouvel utilisateur</h1>
+    <div class="container">
+        {{ form_errors(form) }}
+
+        {{ form_start(form) }}
+
+        {{ form_row(form.username, {
+            label: 'Pseudo :',
+            attr: {'class': 'form-control'}}) }}
+
+        {{ form_row(form.lastname, {
+            label: 'Nom :',
+            attr: {'class': 'form-control'}}) }}
+
+        {{ form_row(form.firstname, {
+            label: 'Prénom :',
+            attr: {'class': 'form-control'}}) }}
+
+        {{ form_row(form.email, {
+            label: 'Email :',
+            attr: {'class': 'form-control'}}) }}
+
+        {{ form_row(form.phone, {
+            label: 'Téléphone :',
+            attr: {'class': 'form-control'}}) }}
+
+        {{ form_row(form.campus, {
+            label: 'Campus :',
+            attr: {'class': 'form-control'}}) }}
+
+
+        <a href="{{ path('app_admin_show') }}" class="btn btn-primary">Retour</a>
+
+        <button type="submit" class="btn btn-primary">Valider les modifications</button>
+
+        {{ form_end(form) }}
+    </div>
+
+{% endblock %}

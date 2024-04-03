@@ -73,7 +73,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\ManyToMany(targetEntity: Event::class, mappedBy: 'participate')]
     private Collection $participationEvents;
-    #[ORM\Column(length: 250)]
+    #[ORM\Column(length: 250, nullable: true)]
     private string $profilePictureFilename;
 
     public function __construct()
