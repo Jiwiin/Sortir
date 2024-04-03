@@ -16,6 +16,9 @@
         <h1 class="text-center">{{ user.username }}</h1>
     {% endif %}
 
+
+    <img src="{{ asset(upload_path ~ '/' ~ user.profilePicture) }}" alt="Photo de profil" class="" width="150" height="150">
+
     <table class="table">
         <tbody>
             {% if isOwnProfile %}

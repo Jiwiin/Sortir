@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\User;
+use App\Entity\Event;
 use App\Form\UserPasswordType;
 use App\Form\UserType;
 use App\Repository\UserRepository;
@@ -153,4 +154,5 @@ class UserController extends AbstractController
 
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     }
+
 }
