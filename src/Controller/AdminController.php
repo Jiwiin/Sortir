@@ -112,4 +112,32 @@ class AdminController extends AbstractController
             'formCSV' => $formCSV,
         ]);
     }
+
+    #[Route('/{id}/delete-user', name: 'app_admin_delete_user', methods: ['GET'])]
+    public function delete(int $id, UserRepository $userRepository, EntityManagerInterface $entityManager): Response
+    {
+        $user = $userRepository->find($id);
+        if (!$user) {
+            $this->addFlash("danger", "L'utilisateur n'existe pas");
+            return $this->redirectToRoute('app_admin_show');
+        }
+
+        $userCurrent = $this->getUser();
+        if (!in_array('ROLE_ADMIN', $userCurrent->getRoles(), true)) {
+            $this->addFlash("danger", "Action non autorisée");
+            return $this->redirectToRoute('app_event_index');
+        }
+
+
+        if (!$user->getEvents()->isEmpty() || !$user->getParticipationEvents()->isEmpty()) {
+            $this->addFlash("danger", "L'utilisateur participe à une ou plusieurs sorties et ne peut pas être supprimé");
+            return $this->redirectToRoute('app_admin_show');
+        }
+
+        $entityManager->remove($user);
+        $entityManager->flush();
+
+        $this->addFlash("success", "L'utilisateur a été supprimé");
+        return $this->redirectToRoute('app_admin_show');
+    }
 }

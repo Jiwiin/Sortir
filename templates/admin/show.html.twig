@@ -16,15 +16,15 @@
     <br>
     <table class="table">
         <thead>
-            <tr>
-                <th>Pseudo</th>
-                <th>Nom</th>
-                <th>Prénom</th>
-                <th>Email</th>
-                <th>Campus</th>
-                <th>Etat</th>
-                <th>Actions</th>
-            </tr>
+        <tr>
+            <th>Pseudo</th>
+            <th>Nom</th>
+            <th>Prénom</th>
+            <th>Email</th>
+            <th>Campus</th>
+            <th>Etat</th>
+            <th>Actions</th>
+        </tr>
         </thead>
         <tbody>
         {% for user in users %}
@@ -43,6 +43,9 @@
                 </td>
                 <td>
                     <a href="{{ path('app_admin_edit', {'id': user.id}) }}"><img src="{{ asset('img/icon/construction.png')}}" width="25px" title="Modifier l'utilisateur"></a>
+                    {% if user.events.isEmpty() and user.participationEvents.isEmpty() %}
+                        <a href="{{ path('app_admin_delete_user', {'id': user.id}) }}"><img src="{{ asset('img/icon/delete.png')}}" width="25px" title="Supprimer l'utilisateur"></a>
+                    {% endif %}
                 </td>
             </tr>
         {% endfor %}
