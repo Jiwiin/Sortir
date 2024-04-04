@@ -224,4 +224,15 @@ class EventRepository extends ServiceEntityRepository
 
     }
 
+    public function findByState($state)
+    {
+        return $this->createQueryBuilder('e')
+            ->andWhere('e.state IN (:state)')
+            ->setParameter('state', $state)
+            ->andWhere('e.state IN (:allowedStates)')
+            ->setParameter('allowedStates', ['Ouverte', 'Clôturée', 'Historisée', 'Annulée', 'En cours'])
+            ->getQuery()
+            ->getResult();
+    }
+
 }
