@@ -51,7 +51,7 @@
         <div class="col-md-5">
             <div class="row">
                 <div class="form-group row">
-                    <label class="col-md-7 col-form-label">
+                    <label class="col-md-6 col-form-label">
                         Campus
                     </label>
                     <div class="col-md-5">
@@ -59,7 +59,7 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-md-7 col-form-label">
+                    <label class="col-md-6 col-form-label">
                         {{ form_label(form.city) }}
                     </label>
                     <div class="col-md-5">
@@ -68,16 +68,19 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-md-7 col-form-label">
+                    <label class="col-md-6 col-form-label">
                         {{ form_label(form.location) }}
                     </label>
                     <div class="col-md-5">
                         {{ form_errors(form.location) }}
                         {{ form_widget(form.location) }}
                     </div>
+                    <div class="col-md-1">
+                            <img src="{{ asset('img/icon/add.png') }}" alt="Ajouter un lieu" width="25px" style="cursor:pointer;" id="openModal" data-bs-toggle="modal" data-bs-target="#locationModal"/>
+                    </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-md-7 col-form-label">
+                    <label class="col-md-6 col-form-label">
                         Rue
                     </label>
                     <div id="location-street" class="col-md-5">
@@ -85,7 +88,7 @@
                     </div>
                 </div>
                 <div class="form-group row">
-                    <label class="col-md-7 col-form-label">
+                    <label class="col-md-6 col-form-label">
                         Code Postal
                     </label>
                     <div id="location-zipcode" class="col-md-5">
@@ -116,6 +119,85 @@
     </div>
     {{ form_end(form) }}
 </div>
+
+<!-- MODAL -->
+<div class="modal fade" id="locationModal" tabindex="-1" aria-labelledby="modalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalLabel">Ajouter un nouveau lieu</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div>
+                    {{ form_start(formLocation) }}
+                    <div class="mb-3">
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label">
+                                {{ form_label(formLocation.city) }}
+                            </label>
+                            <div class="col-md-7">
+                                {{ form_errors(formLocation.city) }}
+                                {{ form_widget(formLocation.city) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label">
+                                {{ form_label(formLocation.name) }}
+                            </label>
+                            <div class="col-md-7">
+                                {{ form_errors(formLocation.name) }}
+                                {{ form_widget(formLocation.name) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label">
+                                {{ form_label(formLocation.street) }}
+                            </label>
+                            <div class="col-md-7">
+                                {{ form_errors(formLocation.street) }}
+                                {{ form_widget(formLocation.street) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label">
+                                {{ form_label(formLocation.latitude) }}
+                            </label>
+                            <div class="col-md-7">
+                                {{ form_errors(formLocation.latitude) }}
+                                {{ form_widget(formLocation.latitude) }}
+                            </div>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <div class="form-group row">
+                            <label class="col-md-3 col-form-label">
+                                {{ form_label(formLocation.longitude) }}
+                            </label>
+                            <div class="col-md-7">
+                                {{ form_errors(formLocation.longitude) }}
+                                {{ form_widget(formLocation.longitude) }}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
+                {{ form_widget(formLocation.add) }}
+                {{ form_end(formLocation) }}
+            </div>
+        </div>
+    </div>
+</div>
+</div>
+<!-- FIN MODAL -->
 
 <script>
     //Récupère les éléments ville et lieu
@@ -194,10 +276,3 @@
         }
     };
 </script>
-
-
-
-
-
-
-
