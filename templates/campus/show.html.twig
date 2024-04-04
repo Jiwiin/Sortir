@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des villes - {{ parent() }}{% endblock %}
+{% block title %}Liste des sites - {{ parent() }}{% endblock %}
 
 {% block body %}
     {% for label, messages in app.flashes(['success', 'danger']) %}
@@ -11,11 +11,11 @@
         {% endfor %}
     {% endfor %}
 
-    <h1 class="text-center mb-5">Gérer les villes</h1>
+    <h1 class="text-center mb-5">Gérer les campus</h1>
 
     {# TODO : à dynamiser !! #}
     <form class="mb-5">
-        <h3 class="mb-3">Filtrer les villes</h3>
+        <h3 class="mb-3">Filtrer les sites</h3>
         <label>Le nom contient : </label>
         <input type="text" placeholder="Rechercher">
         <bouton class="btn btn-primary">Rechercher</bouton>
@@ -24,23 +24,20 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Ville</th>
-                <th>Code Postal</th>
+                <th>Campus</th>
                 <th>Actions</th>
             </tr>
         </thead>
         <tbody>
-        {% for city in cities %}
+        {% for campus in schools %}
             <tr>
-                <td>{{ city.name }}</td>
-                <td>{{ city.zipcode }}</td>
+                <td>{{ campus.name }}</td>
                 <td>
                     {# TODO : redirection à faire #}
-                    <a href="#"><img src="{{ asset('img/icon/construction.png') }}" width="25px" title="Modifier la ville"></a>
+                    <a href="#"><img src="{{ asset('img/icon/construction.png') }}" width="25px" title="Modifier le campus"></a>
                 </td>
             </tr>
         {% endfor %}
-
         </tbody>
     </table>
     {{ include('inc/_backBtn.html.twig') }}
