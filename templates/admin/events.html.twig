@@ -1,0 +1,75 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Liste des sorties - {{ parent() }}{% endblock %}
+
+{% block body %}
+    {% for label, messages in app.flashes(['success', 'danger']) %}
+        {% for message in messages %}
+            <div class="alert alert-{{ label }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+    {% endfor %}
+    <div class="container d-flex justify-content-end">
+        <div class="d-flex flex-column align-items-end form-style">
+            <p>Date du jour : <strong>{{ "now"|format_datetime(pattern="d MMMM y", locale='fr') }}</strong></p>
+        </div>
+    </div>
+    <div>
+        <h1>Administration : Liste des sorties</h1>
+
+        <table class="table table-hover eventlist-table">
+            <thead class="text-center">
+            <tr>
+                <th>Nom de la sortie</th>
+                <th>Date de la sortie</th>
+                <th>Clôture</th>
+                <th>Inscrits/Places</th>
+                <th>État</th>
+                <th>Organisateur</th>
+                <th>Actions</th>
+            </tr>
+            </thead>
+            <tbody class="text-center">
+            {% for event in events %}
+
+                    <tr>
+                        <td><a href="{{ path('app_event_show', {'id': event.id}) }}">{{ event.name }}</a></td>
+                        <td>{{ event.dateStart ? event.dateStart|format_datetime(pattern="d MMMM y à HH:mm", locale='fr'): '' }}</td>
+                        <td>{{ event.dateLimitRegistration ? event.dateLimitRegistration|format_datetime(pattern="d MMMM y à HH:mm", locale='fr') : '' }}</td>
+                        <td>{{ event.participate.count }}/ {{ event.maxRegistration }}</td>
+                        <td> <span class="badge rounded-pill
+                                {% if event.state.value == 'Ouverte' %}
+                                    bg-success" title="Sortie Ouverte, inscrivez-vous !"
+                                {% elseif event.state.value == 'Terminée' %}
+                                    bg-dark" title="Cette sortie est terminée !"
+                            {% elseif event.state.value == 'Historisée' %}
+                                bg-secondary" title="Cette sortie est terminée, c'est de l'histoire ancienne."
+                            {% elseif event.state.value == 'Annulée' %}
+                                bg-danger" title="Oh non ! la sortie est annulée"
+                            {% elseif event.state.value == 'En cours' %}
+                                bg-info" title="Cette sortie est en cours !"
+                            {% else %}
+                                bg-warning" title="La sortie est clôturée, vous ne pouvez plus vous inscrire.."
+                            {% endif %}
+                            >{{ event.state.value }}</span> </td>
+                        <td><a href="{{ path('app_user_show', {'id': event.eventOrganizer.id}) }} " title="voir le profil de {{ event.eventOrganizer.username }}">
+                                {{ event.eventOrganizer.username }}
+                            </a>
+                        </td>
+                        <td>
+                            <a href="{{ path('app_event_show', {'id': event.id}) }}"><img src="{{ asset('img/icon/view.png')}}" width="25px" title="Voir la sortie"></a>
+                            {% if is_granted('ROLE_ADMIN') and (event.state.value == 'Ouverte' or event.state.value == 'Clôturée') %}
+                                <a href="{{ path('app_event_cancel', {'id': event.id}) }}"><img src="{{ asset('img/icon/cancel.png')}}" width="25px" title="Annuler la sortie"></a>
+                            {% endif %}
+                        </td>
+                    </tr>
+            {% else %}
+                <tr>
+                    <td colspan="8">Aucune sortie trouvée</td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+    </div>
+{% endblock %}

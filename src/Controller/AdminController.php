@@ -2,12 +2,16 @@
 
 namespace App\Controller;
 
+use App\Data\SearchData;
 use App\Entity\Campus;
 use App\Entity\User;
 use App\Form\AdminCreateUserType;
 use App\Form\AdminUserType;
 use App\Form\CSVUploadFormType;
+use App\Form\SearchForm;
 use App\Form\UserType;
+use App\Repository\CampusRepository;
+use App\Repository\EventRepository;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use League\Csv\Reader;
@@ -139,5 +143,25 @@ class AdminController extends AbstractController
 
         $this->addFlash("success", "L'utilisateur a été supprimé");
         return $this->redirectToRoute('app_admin_show');
+    }
+
+    #[Route('/events', name: 'app_admin_events', methods: ['GET'])]
+    public function showEvents(EventRepository $eventRepository, EntityManagerInterface $entityManager, Request $request): Response
+    {
+        $eventRepository->updateEventState();
+
+
+
+        // filtre form
+        $data = new SearchData();
+        $form = $this->createForm(SearchForm::class, $data);
+        $form->handleRequest($request);
+
+        $events = $eventRepository->findSearchAdmin($data);
+
+        return $this->render('admin/events.html.twig', [
+            'events' => $events,
+            'form' => $form->createView(),
+        ]);
     }
 }
