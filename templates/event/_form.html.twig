@@ -128,9 +128,9 @@
                 <h5 class="modal-title" id="modalLabel">Ajouter un nouveau lieu</h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
+            {{ form_start(formLocation) }}
             <div class="modal-body">
                 <div>
-                    {{ form_start(formLocation) }}
                     <div class="mb-3">
                         <div class="form-group row">
                             <label class="col-md-3 col-form-label">
@@ -191,8 +191,8 @@
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fermer</button>
                 {{ form_widget(formLocation.add) }}
-                {{ form_end(formLocation) }}
             </div>
+            {{ form_end(formLocation) }}
         </div>
     </div>
 </div>

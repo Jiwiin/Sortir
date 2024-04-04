@@ -220,7 +220,6 @@ class EventController extends AbstractController
         return $this->render('event/new.html.twig', [
             'form' => $form,
             'formLocation' => $formLocation,
-
         ]);
     }
 
