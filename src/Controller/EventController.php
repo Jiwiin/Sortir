@@ -10,6 +10,7 @@ use App\Entity\User;
 use App\Enum\State;
 use App\Form\CancelEventType;
 use App\Form\EventType;
+use App\Form\LocationType;
 use App\Form\SearchForm;
 use App\Repository\CampusRepository;
 use App\Repository\EventRepository;
@@ -181,9 +182,12 @@ class EventController extends AbstractController
     public function new(Request $request, LocationService $locationService, EntityManagerInterface $entityManager): Response
     {
         $event = new Event();
+        $location = new Location();
+        $formLocation = $this->createForm( LocationType::class, $location);
         $form = $this->createForm(EventType::class, $event, [
             'displayDeleteButton' => false,
         ]);
+        $formLocation->handleRequest($request);
         $form->handleRequest($request);
 
         /** @var User $user */
@@ -205,8 +209,17 @@ class EventController extends AbstractController
             return $this->redirectToRoute('app_event_show', ['id' => $event->getId()], Response::HTTP_SEE_OTHER);
         }
 
+        if ($formLocation->isSubmitted() && $formLocation->isValid())
+        {
+            $entityManager->persist($location);
+            $entityManager->flush();
+            $this->addFlash('success', 'Le lieu a été ajouté.');
+            return $this->redirectToRoute('app_event_new');
+        }
+
         return $this->render('event/new.html.twig', [
             'form' => $form,
+            'formLocation' => $formLocation,
 
         ]);
     }
