@@ -74,7 +74,7 @@ class AdminController extends AbstractController
             $entityManager->persist($user);
             $entityManager->flush();
 
-           $this->addFlash('success', 'L\'utilisateur à été ajouté.' );
+            $this->addFlash('success', 'L\'utilisateur à été ajouté.' );
             return $this->redirectToRoute('app_admin_show');
         }
 
