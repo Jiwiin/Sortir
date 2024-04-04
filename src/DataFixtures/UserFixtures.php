@@ -28,7 +28,6 @@ class UserFixtures extends Fixture
             ->setLastname("admin")
             ->setPhone("06".rand(00000001, 99999999))
             ->setStatus(true)
-            ->setProfilePicture('profil.jpg')
             ->setFirstname("nous")
             ->setCampus($campusList[array_rand($campusList)])
             ->setPassword($this->hasher->hashPassword($user, 'azerty'));

@@ -76,13 +76,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\ManyToMany(targetEntity: Event::class, mappedBy: 'participate')]
     private Collection $participationEvents;
-    #[ORM\Column(length: 250, nullable: true)]
+    #[ORM\Column(length: 250)]
     private string $profilePictureFilename;
 
     public function __construct()
     {
         $this->events = new ArrayCollection();
         $this->participationEvents = new ArrayCollection();
+        $this->profilePictureFilename = 'profil.jpg';
     }
 
 
