@@ -95,6 +95,7 @@ class AdminController extends AbstractController
                     $user->setRoles(['ROLE_USER']);
                     $user->setLastname($record['lastname']);
                     $user->setPhone($record['phone']);
+                    $user->setProfilePicture('profil.jpg');
                     $user->setCampus($entityManager->getRepository(Campus::class)->find($record['campus_id']));
                     $user->setStatus(true);
                     $entityManager->persist($user);

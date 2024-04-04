@@ -16,47 +16,57 @@
         <h1 class="text-center">{{ user.username }}</h1>
     {% endif %}
 
-
-    <img src="{{ asset(upload_path ~ '/' ~ user.profilePicture) }}" alt="Photo de profil" class="" width="150" height="150">
-
-    <table class="table">
-        <tbody>
-            {% if isOwnProfile %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-3">
+            <img src="{{ asset(upload_path ~ '/' ~ user.profilePicture) }}" alt="Photo de profil" class="" width="150" height="150">
+        </div>
+        <div class="col-md-8">
+            <table class="table">
+                <tbody>
+                {% if isOwnProfile %}
+                    <tr>
+                        <th>Pseudo</th>
+                        <td>{{ user.username }}</td>
+                    </tr>
+                {% endif %}
                 <tr>
-                    <th>Pseudo</th>
-                    <td>{{ user.username }}</td>
+                    <th>Prénom</th>
+                    <td>{{ user.firstname }}</td>
                 </tr>
+                <tr>
+                    <th>Nom</th>
+                    <td>{{ user.lastname }}</td>
+                </tr>
+                <tr>
+                    <th>Campus</th>
+                    <td>{{ user.campus.name }}</td>
+                </tr>
+                <tr>
+                    <th>Téléphone</th>
+                    <td>{{ user.phone }}</td>
+                </tr>
+                <tr>
+                    <th>Email</th>
+                    <td>{{ user.email }}</td>
+                </tr>
+                </tbody>
+            </table>
+            {% if isOwnProfile %}
+
+                <a href="{{ path('app_event_index') }}" class="btn btn-primary">Retour</a>
+
+                <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-primary">Modifier</a>
+
+            {% else %}
+                {{ include('inc/_backBtn.html.twig') }}
             {% endif %}
-            <tr>
-                <th>Prénom</th>
-                <td>{{ user.firstname }}</td>
-            </tr>
-            <tr>
-                <th>Nom</th>
-                <td>{{ user.lastname }}</td>
-            </tr>
-            <tr>
-                <th>Campus</th>
-                <td>{{ user.campus.name }}</td>
-            </tr>
-            <tr>
-                <th>Téléphone</th>
-                <td>{{ user.phone }}</td>
-            </tr>
-            <tr>
-                <th>Email</th>
-                <td>{{ user.email }}</td>
-            </tr>
-        </tbody>
-    </table>
-    {% if isOwnProfile %}
+        </div>
+    </div>
+</div>
 
-            <a href="{{ path('app_event_index') }}" class="btn btn-primary">Retour</a>
 
-            <a href="{{ path('app_user_edit', {'id': user.id}) }}" class="btn btn-primary">Modifier</a>
 
-    {% else %}
-        {{ include('inc/_backBtn.html.twig') }}
-    {% endif %}
+
 {% endblock %}
 
