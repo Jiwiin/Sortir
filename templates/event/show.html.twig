@@ -148,7 +148,7 @@
                 </table>
             </div>
         </div>
-        <div class="col-md-8 mt-5">
+        <div class="col-md-2 mt-5">
             <div class="mb-3">
             <a href="{{ path('app_event_index') }}" class="btn btn-primary">Retour</a>
             </div>
@@ -170,9 +170,13 @@
                 <div class="mb-3"><a href="{{ path('app_event_cancel', {'id': event.id}) }}" class="btn btn-danger">Annuler</a></div>
             {% endif %}
         </div>
+        {% if event.location.latitude is not null and event.location.longitude is not null %}
+            <div id="map" style="height: 400px;" class="col-md-5"></div>
+        {% endif %}
     </div>
 
 
+</div>
     <script>
         function confirmDelete() {
             return confirm('Êtes-vous sûr de vouloir supprimer cette sortie ?');
@@ -180,6 +184,20 @@
         function confirmPublish() {
             return confirm('Êtes-vous sûr de vouloir publier cette sortie ?');
         }
+        var latitude = {{ event.location.latitude|json_encode()|raw }};
+        var longitude = {{ event.location.longitude|json_encode()|raw }};
+
+        var map = L.map('map', {
+            center: [latitude, longitude],
+            zoom: 13
+        });
+        var marker = L.marker([latitude, longitude]).addTo(map);
+        L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            maxZoom: 19,
+            attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a>'
+        }).addTo(map);
+
+        map.invalidateSize();
     </script>
 
 
