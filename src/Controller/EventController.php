@@ -16,6 +16,7 @@ use App\Repository\EventRepository;
 use App\Services\LocationService;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -350,6 +351,41 @@ class EventController extends AbstractController
             'cancelEventForm'=> $form->createView(),
             'event'=> $event
         ]);
+    }
+
+    #[Route('/get-events/{eventList}', name:'get_event_list', methods: ['GET'])]
+    public function getEventList(EventRepository $eventRepository, Request $request): JsonResponse
+    {
+        // Récupérer le paramètre d'état de la requête
+        $state = $request->query->get('state');
+
+        // Vérifier si l'état est valide
+        $allowedStates = ['ouverte', 'en cours', 'historisée', 'annulée', 'cloturée'];
+        if ($state && !in_array($state, $allowedStates))
+        {
+            return new JsonResponse(['error' => 'État non valide'], 400);
+        }
+
+        // Récupérer les événements en fonction de l'état spécifié
+        $eventList = $eventRepository->findBy(['state' => $state ?: $allowedStates]);
+
+        // Construit la liste des événements à retourner en format JSON
+        $eventListArray = [];
+        foreach ($eventList as $event) {
+            $eventListArray[] = [
+                'id' => $event->getId(),
+                'name' => $event->getName(),
+                'dateStart' => $event->getDateStart(),
+                'duration' => $event->getDuration(),
+                'dateLimitRegistration' => $event->getDateLimitRegistration(),
+                'maxRegistration' => $event->getMaxRegistration(),
+                'state' => $event->getState(),
+                'locationId' => $event->getLocation()->getId(),
+                'eventOrganizerId' => $event->getEventOrganizer()
+            ];
+        }
+
+        return new JsonResponse($eventListArray);
     }
 
 }
