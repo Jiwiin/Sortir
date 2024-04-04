@@ -11,7 +11,7 @@
         {% endfor %}
     {% endfor %}
     <h1>Modifier mon profil</h1>
-<div class="container">
+<div class="container form-style">
     {{ form_errors(form) }}
 
     {{ form_start(form) }}
@@ -50,6 +50,10 @@
         label: 'Campus :',
         attr: {'class': 'form-control',
             'autocomplete' : 'campus'}
+    }) }}
+
+    {{ form_row(form.profilePicture, {
+        label: 'Photo de profil :',
     }) }}
 
 
