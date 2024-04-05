@@ -20,7 +20,7 @@
         <input type="text" placeholder="Rechercher">
         <bouton class="btn btn-primary">Rechercher</bouton>
     </form>
-
+    {{ form_start(form) }}
     <table class="table">
         <thead>
             <tr>
@@ -29,17 +29,24 @@
             </tr>
         </thead>
         <tbody>
+        <tr>
+            <td>{{ form_widget(form.name) }}</td>
+            <td><button type="submit" class="btn">
+                    <img src="{{ asset('img/icon/add.png') }}" width="25px" title="Ajouter un campus">
+                </button></td>
+        </tr>
         {% for campus in schools %}
             <tr>
                 <td>{{ campus.name }}</td>
                 <td>
                     {# TODO : redirection à faire #}
-                    <a href="#"><img src="{{ asset('img/icon/construction.png') }}" width="25px" title="Modifier le campus"></a>
+                    <a href="{{ path('app_campus_delete', {'id': campus.id}) }}"><img src="{{ asset('img/icon/delete.png') }}" width="25px" title="Supprimer le campus"></a>
                 </td>
             </tr>
         {% endfor %}
         </tbody>
     </table>
+    {{ form_end(form) }}
     {{ include('inc/_backBtn.html.twig') }}
 
 
