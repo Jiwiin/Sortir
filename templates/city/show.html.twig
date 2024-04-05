@@ -20,7 +20,7 @@
         <input type="text" placeholder="Rechercher">
         <bouton class="btn btn-primary">Rechercher</bouton>
     </form>
-
+    {{ form_start(form) }}
     <table class="table">
         <thead>
             <tr>
@@ -30,19 +30,27 @@
             </tr>
         </thead>
         <tbody>
+        <tr>
+            <td>{{ form_widget(form.name) }}</td>
+            <td>{{ form_widget(form.zipcode) }}</td>
+            <td><button type="submit" class="btn">
+                    <img src="{{ asset('img/icon/add.png') }}" width="25px" title="Ajouter une ville">
+                </button></td>
+        </tr>
         {% for city in cities %}
             <tr>
                 <td>{{ city.name }}</td>
                 <td>{{ city.zipcode }}</td>
                 <td>
                     {# TODO : redirection à faire #}
-                    <a href="#"><img src="{{ asset('img/icon/construction.png') }}" width="25px" title="Modifier la ville"></a>
+                    <a href="{{ path('app_city_delete', {'id': city.id}) }}"><img src="{{ asset('img/icon/delete.png') }}" width="25px" title="Modifier la ville"></a>
                 </td>
             </tr>
         {% endfor %}
 
         </tbody>
     </table>
+    {{ form_end(form) }}
     {{ include('inc/_backBtn.html.twig') }}
 
 
