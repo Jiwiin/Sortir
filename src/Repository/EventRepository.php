@@ -89,7 +89,12 @@ class EventRepository extends ServiceEntityRepository
             WHEN e.eventOrganizer = :user THEN 1
             WHEN :user MEMBER OF e.participate THEN 2
             ELSE 3
-        END AS HIDDEN priority
+        END AS HIDDEN priority,
+    CASE
+        WHEN e.state = 'Ouverte' THEN 1
+        WHEN e.state = 'Clôturée' THEN 2
+        ELSE 3
+    END AS HIDDEN statePriority
     ")
             ->setParameter('user', $search->user)
             ->andWhere('
@@ -99,6 +104,7 @@ class EventRepository extends ServiceEntityRepository
             ->setParameter('excludedStates', ['Historisée', 'Annulée', 'Terminée'])
             ->setParameter('limitDate', new \DateTime('-1 month'))
             ->orderBy('priority', 'ASC')
+            ->addOrderBy('statePriority', 'ASC')
             ->addOrderBy('e.dateLimitRegistration', 'ASC');
 
         return $query->getQuery()->getResult();
