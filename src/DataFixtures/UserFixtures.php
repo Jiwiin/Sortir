@@ -33,6 +33,18 @@ class UserFixtures extends Fixture
             ->setPassword($this->hasher->hashPassword($user, 'azerty'));
         $manager->persist($user);
 
+        $user = (new User());
+        $user->setRoles(['ROLE_USER'])
+            ->setEmail('john@doe.fr')
+            ->setUsername('john D')
+            ->setLastname("doe")
+            ->setPhone("06".rand(00000001, 99999999))
+            ->setStatus(true)
+            ->setFirstname("John")
+            ->setCampus($campusList[array_rand($campusList)])
+            ->setPassword($this->hasher->hashPassword($user, 'azerty'));
+        $manager->persist($user);
+
 
         for($i = 1; $i <= 30; $i++){
             $randomUser = new User();
