@@ -80,11 +80,7 @@ class EventController extends AbstractController
         {
             throw $this->createNotFoundException('L\'utilisateur n\'existe pas');
         }
-        if ($event->getDateLimitRegistration() < $currentDateTime)
-        {
-            $this->addFlash('danger', 'Vous ne pouvez plus vous désincrire car la date limite d\'insciption est dépassée.');
-            return $this->redirectToRoute('app_event_show', ['id'=>$id]);
-        }
+
 
         //Verif état ouvert ou cloturée
         if ($event->getState()== State::OUVERTE || $event->getState()== State::CLOTURE)
