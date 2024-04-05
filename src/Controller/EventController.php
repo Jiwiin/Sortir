@@ -232,6 +232,8 @@ class EventController extends AbstractController
     {
         /** @var User $user */
         $user = $this->getUser();
+        $location = new Location();
+        $formLocation = $this->createForm( LocationType::class, $location);
 
         if($event->getEventOrganizer() != $user ) {
             return $this->redirectToRoute('app_event_show', ['id' => $event->getId()], Response::HTTP_SEE_OTHER);
@@ -252,11 +254,19 @@ class EventController extends AbstractController
             'displayDeleteButton' => true,
         ]);
         $form->handleRequest($request);
+        $formLocation->handleRequest($request);
 
         if($form->isSubmitted()) {
             if($form->get('delete')->isClicked()) {
                 return $this->redirectToRoute('app_event_delete', ['id' => $event->getId()], Response::HTTP_SEE_OTHER);
             }
+        }
+        if ($formLocation->isSubmitted() && $formLocation->isValid())
+        {
+            $entityManager->persist($location);
+            $entityManager->flush();
+            $this->addFlash('success', 'Le lieu a été ajouté.');
+            return $this->redirectToRoute('app_event_show', ['id' => $event->getId()], Response::HTTP_SEE_OTHER);
         }
 
         if ($form->isSubmitted() && $form->isValid()) {
@@ -268,6 +278,7 @@ class EventController extends AbstractController
         return $this->render('event/edit.html.twig', [
             'event' => $event,
             'form' => $form,
+            'formLocation' => $formLocation,
             'locationsData' => json_encode($locationsData),
         ]);
     }
