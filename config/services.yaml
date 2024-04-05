@@ -15,6 +15,11 @@ services:
 
     # makes classes in src/ available to be used as services
     # this creates a service per class whose id is the fully-qualified class name
+    app.redirection_exception_listener:
+        class: App\EventListener\RedirectionExceptionListener
+        arguments: [ '@router' ]
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, method: onKernelException }
     App\:
         resource: '../src/'
         exclude:
