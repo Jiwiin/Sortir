@@ -1,0 +1,11 @@
+email,username,password,firstname,lastname,phone,campus_id
+user1@example.com,user1,"password123",John,Doe,1234567890,4
+user2@example.com,user2,"password123",Jane,Doe,1234567891,4
+user3@example.com,user3,"password123",Jim,Beam,1234567892,4
+user4@example.com,user4,"password123",Jack,Daniels,1234567893,4
+user5@example.com,user5,"password123",Johnny,Walker,1234567894,4
+user6@example.com,user6,"password123",Jasper,Newton,1234567895,4
+user7@example.com,user7,"password123",Jameson,Irish,1234567896,4
+user8@example.com,user8,"password123",Jose,Cuervo,1234567897,4
+user9@example.com,user9,"password123",Jinro,Korean,1234567898,4
+user10example.com,user10,"password123",Jefferson,Bourbon,1234567899,4
