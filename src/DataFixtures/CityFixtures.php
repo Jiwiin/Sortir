@@ -23,6 +23,10 @@ class CityFixtures extends Fixture
         $city->setName('Niort');
         $city->setZipcode('79000');
         $manager->persist($city);
+        $city = (new City());
+        $city->setName('Chessy');
+        $city->setZipcode('77700');
+        $manager->persist($city);
 
         $manager->flush();
     }

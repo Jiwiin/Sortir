@@ -17,11 +17,20 @@ class LocationFixtures extends Fixture
     {
         $cityList = $manager->getRepository(City::class)->findAll();
 
+        $location = (new Location());
+        $location->setName('Disneyland Paris')
+            ->setStreet('Bd de parc')
+            ->setLatitude(48.871900)
+            ->setLongitude(2.776623)
+            ->setCity($cityList[3]);
+        $manager->persist($location);
 
         $location = (new Location());
         $location->setName('Cinéma Pathé')
             ->setStreet('5 rue charles de gaulle')
-            ->setCity($cityList[array_rand($cityList)]);
+            ->setCity($cityList[array_rand($cityList)])
+            ->setLatitude(48.866667)
+            ->setLongitude(2.333333);
         $manager->persist($location);
 
         $location = (new Location());
@@ -41,9 +50,9 @@ class LocationFixtures extends Fixture
         for ($i = 0; $i < 30; $i++) {
             $Location = new Location();
             $Location->setName($faker->randomElement(['Cinéma', 'Parc', 'Musée', 'Galerie', 'Restaurant', 'Théatre', 'Stade', 'Centre commercial']) . " " .$faker->lastName);
-            $Location->setStreet($faker->streetAddress);
-            $Location->setLatitude($faker->latitude);
-            $Location->setLongitude($faker->longitude);
+            $Location->setStreet($faker->streetAddress)
+            ->setLatitude(48.866667)
+            ->setLongitude(2.333333);
             $Location->setCity($cityList[array_rand($cityList)]);
 
             $this->locations[] = $Location;
